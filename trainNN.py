@@ -4,46 +4,41 @@ from keras.optimizers import Adam
 import time
 import keras
 import pandas
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, AlphaDropout
+#from keras.models import Sequential
+#from keras.layers import Dense, Dropout, AlphaDropout
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
 import matplotlib.pyplot as plt
-from commonFunctions import getYields, FullFOM
+from commonFunctions import getYields, FullFOM, myClassifier
 #from scipy.stats import ks_2samp
 import localConfig as cfg
 from prepareDATA import *
 
 
-n_neurons = 14
-n_layers = 2
-n_epochs = 25
-batch_size = 5
+n_neurons = 20
+n_layers = 3
+n_epochs = 50
+batch_size = len(XDev)/1000
 learning_rate = 0.001/5.0
-name = "myNN_N"+str(n_neurons)+"_L"+str(n_layers)+"_E"+str(n_epochs)+"B"+str(batch_size)+"Lr"+str(learning_rate)+"_Dev"+train_DM+"_Val"+test_point
-
-filepath = cfg.lgbk+name
-os.mkdir(filepath)
-os.chdir(filepath)
+dropout_rate = 0.5
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
 trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
 myAdam = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myAdam
 
-def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers):
-  model = Sequential()
-  model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-  for i in range(0,layers-1):
-      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
-  model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
-  model.compile(**compileArgs)
-  return model
+#name = "myNN_N"+str(n_neurons)+"_L"+str(n_layers)+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
+name = "myNN_MC"+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
 
+filepath = cfg.lgbk+name
+os.mkdir(filepath)
+os.chdir(filepath)
+print("Dir "+filepath+" created.")
 print("Starting the training")
 start = time.time()
-call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
-model = getDefinedClassifier(len( trainFeatures), 1, compileArgs, n_neurons, n_layers)
-history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,callbacks=[call], **trainParams)
+#call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
+#model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate)
+model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
+history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,shuffle=True, **trainParams)
 print("Training took ", time.time()-start, " seconds")
 
 # To save:

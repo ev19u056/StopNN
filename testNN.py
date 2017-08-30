@@ -10,17 +10,17 @@ from sklearn.preprocessing import StandardScaler
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam
-from sklearn.metrics import confusion_matrix, cohen_kappa_score
+from sklearn.metrics import confusion_matrix, cohen_kappa_score, roc_curve, roc_auc_score
 from scipy.stats import ks_2samp
 import matplotlib.pyplot as plt
 import localConfig as cfg
 from commonFunctions import StopDataLoader, FOM1, FOM2, FullFOM, getYields
-import sys
 
+import sys
 from keras.models import model_from_json
 from prepareDATA import *
 
-model_name = "myNN_N14_L2_E15B5Lr0.0002_DevDM30_Val550_520"
+model_name = "myNN_MC_E50_B28_Lr0.0002_Dr0.5_DevDM30_Val550_520"
 
 filepath = cfg.lgbk+model_name
 os.chdir(filepath)
@@ -43,10 +43,10 @@ scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 1)
 scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 1)
 print ""
 cohen_kappa=cohen_kappa_score(YVal, valPredict.round())
-   
+
 print "Calculating parameters"
 dataDev["NN"] = devPredict
-dataVal["NN"] = valPredict  
+dataVal["NN"] = valPredict
 
 sig_dataDev=dataDev[dataDev.category==1]
 bkg_dataDev=dataDev[dataDev.category==0]
@@ -56,7 +56,7 @@ bkg_dataVal=dataVal[dataVal.category==0]
 tmpSig, tmpBkg = getYields(dataVal)
 sigYield, sigYieldUnc = tmpSig
 bkgYield, bkgYieldUnc = tmpBkg
-        
+
 
 fomEvo = []
 fomCut = []
@@ -85,8 +85,8 @@ for k in fomEvo:
 Eff = zip(bkgEff, sigEff)
 
 km_value=ks_2samp((sig_dataDev["NN"].append(bkg_dataDev["NN"])),(sig_dataVal["NN"].append(bkg_dataVal["NN"])))
-        
-#f.write(str(y)+"\n")           
+
+#f.write(str(y)+"\n")
 #print "Layers:", y
 #f.write(str(x)+"\n")
 #print "Neurons:", x
@@ -100,9 +100,9 @@ print "FOM Cut:", fomCut[fomEvo.index(max_FOM)]
 print "KS test statistic:", km_value[0]
 #f.write(str(km_value[1])+"\n")
 print "KS test p-value:", km_value[1]
-        
+
         #f.close()
-        
+
 selectedVal = dataVal[dataVal.NN>fomCut[fomEvo.index(max_FOM)]]
 selectedSig = selectedVal[selectedVal.category == 1]
 selectedBkg = selectedVal[selectedVal.category == 0]
@@ -110,14 +110,19 @@ sigYield = selectedSig.weight.sum()
 bkgYield = selectedBkg.weight.sum()
 sigYield = sigYield * luminosity * 2          #The factor 2 comes from the splitting
 bkgYield = bkgYield * luminosity * 2
-        
+
 
 print "Selected events left after cut @", fomCut[fomEvo.index(max_FOM)]
 print "   Number of selected Signal Events:", len(selectedSig)
 print "   Number of selected Background Events:", len(selectedBkg)
 print "   Sig Yield", sigYield
 print "   Bkg Yield", bkgYield
-        
+
+roc_integral = roc_auc_score(dataVal.category, dataVal.NN)
+fpr, tpr, _ = roc_curve(dataVal.category, dataVal.NN)
+
+print "ROC Curve Integral:", roc_integral
+
 print "Plotting"
 
 plt.figure(figsize=(7,6))
@@ -138,12 +143,12 @@ plt.figure(figsize=(7,6))
 plt.xlabel('NN output')
 plt.title("Number of Events")
 #plt.yscale('log', nonposy='clip')
-plt.legend(['Background + Signal (test sample)', 'Background (test sample)'], loc="upper left" )
+plt.legend(['Background + Signal (test sample)', 'Background (test sample)'], loc="best" )
 plt.hist(bkg_dataDev["NN"], 50, facecolor='red', weights=bkg_dataDev["weight"])
 plt.hist(both_dataDev["NN"], 50, color="blue", histtype="step", weights=both_dataDev["weight"])
 plt.savefig('pred_'+model_name+'.png', bbox_inches='tight')
 plt.show()
-        
+
 plt.figure(figsize=(7,6))
 plt.subplots_adjust(hspace=0.5)
 plt.subplot(211)
@@ -151,8 +156,7 @@ plt.plot(fomCut, fomEvo)
 plt.title("FOM")
 plt.ylabel("FOM")
 plt.xlabel("ND")
-plt.legend(["Max. FOM: {0}".format(max_FOM)], loc='upper left')
-
+plt.legend(["Max. FOM: {0}".format(max_FOM)], loc='best')
 
 plt.subplot(212)
 plt.semilogy(fomCut, Eff)
@@ -161,8 +165,16 @@ plt.axvspan(fomCut[fomEvo.index(max_FOM)], 1, facecolor='#2ca02c', alpha=0.3)
 plt.title("Efficiency")
 plt.ylabel("Eff")
 plt.xlabel("ND")
-plt.legend(['Background', 'Signal'], loc='upper left')
+plt.legend(['Background', 'Signal'], loc='best')
 plt.savefig('FOM_'+model_name+'.png', bbox_inches='tight')
 plt.show()
-         
+
+plt.plot(fpr, tpr)
+plt.xlabel('False positive rate')
+plt.ylabel('True positive rate')
+plt.title('ROC curve')
+plt.legend(["Integral: {0}".format(roc_integral)],loc='best')
+plt.savefig('ROC_'+model_name+'.png', bbox_inches='tight')
+plt.show()
+
 sys.exit("Done!")

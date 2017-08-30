@@ -1,6 +1,9 @@
 import root_numpy
 import pandas
 import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, AlphaDropout
+from keras.optimizers import Adam
 from math import log
 
 signalMap = {
@@ -204,3 +207,43 @@ def getYields(dataVal, cut=0.5, luminosity=35866, splitFactor=2):
     bkgYieldUnc = bkgYieldUnc * luminosity * splitFactor
 
     return ((sigYield, sigYieldUnc), (bkgYield, bkgYieldUnc))
+
+# Classifiers
+def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate):
+  model = Sequential()
+  model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+  for i in range(0,layers-1):
+      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))  
+      model.add(Dropout(dropout_rate))
+  model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
+  model.compile(**compileArgs)
+  return model
+
+def gridClassifier(nIn, nOut, compileArgs, layers=1, neurons=1, learn_rate=0.001, dropout_rate=0.0):
+    model = Sequential()
+    model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+    for i in range(0,layers-1):
+        model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
+        model.add(Dropout(dropout_rate))
+    model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
+    optimizer = Adam(lr=learn_rate)
+    compileArgs['optimizer'] = optimizer
+    model.compile(**compileArgs)
+    print("\nTraining with %i layers and %i neurons\n" % (layers, neurons))
+    return model
+
+def myClassifier(nIn, nOut, compileArgs, dropout_rate=0.0, learn_rate=0.001):
+    model = Sequential()
+    model.add(Dense(18, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(12, kernel_initializer='he_normal', activation='relu'))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(6, kernel_initializer='he_normal', activation='relu'))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(4, kernel_initializer='he_normal', activation='relu'))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
+    optimizer = Adam(lr=learn_rate)
+    compileArgs['optimizer'] = optimizer
+    model.compile(**compileArgs)
+    return model
