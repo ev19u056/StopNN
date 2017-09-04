@@ -222,7 +222,8 @@ def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate):
 def gridClassifier(nIn, nOut, compileArgs, layers=1, neurons=1, learn_rate=0.001, dropout_rate=0.0):
     model = Sequential()
     model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-    for i in range(0,layers-1):
+    #model.add(Dropout(dropout_rate))
+    for i in range(0,layers):
         model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
         model.add(Dropout(dropout_rate))
     model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))

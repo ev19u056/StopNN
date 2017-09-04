@@ -19,7 +19,7 @@ n_layers = 3
 n_epochs = 50
 batch_size = len(XDev)/1000
 learning_rate = 0.001/5.0
-dropout_rate = 0.5
+dropout_rate = 0.1
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
 trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
