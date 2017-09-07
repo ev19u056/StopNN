@@ -4,7 +4,7 @@ Code inspired from: https://machinelearningmastery.com/grid-search-hyperparamete
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import sys
-import numpy
+import numpy as np
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from keras.wrappers.scikit_learn import KerasClassifier
 import time
@@ -16,7 +16,7 @@ import localConfig as cfg
 import datetime 
 from scipy.stats import randint, uniform
 
-from commonFunctions import gridClassifier, myClassifier
+from commonFunctions import gridClassifier, myClassifier, arange
 
 os.chdir(cfg.lgbk+"Searches")
 
@@ -26,7 +26,7 @@ l=len(XDev)
 
 # Fix seed for reproducibility
 seed = 42
-numpy.random.seed(seed)
+np.random.seed(seed)
 
 # Tune the Number of Neurons in the Hidden Layer 
 
@@ -34,22 +34,21 @@ model = KerasClassifier(build_fn=gridClassifier,nIn=len(trainFeatures),nOut=1, c
 #model = KerasClassifier(build_fn=myClassifier,nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,batch_size=20, verbose = 1)
 
 #Hyperparameters
-n_iter_search = 2
+n_iter_search = 40
 
-neurons = [16]
+neurons = arange([],1,20)
 #neurons = randint(5, 50)
-layers = [1]
+layers = arange([],1,3)
+#layers = randint(1,3)
 #epochs = [15]
-epochs = randint(10,100)
-#batch_size = [l/100, l/10000]
-batch_size = [l/1000]
-learn_rate = [0.001, 0.01]
-dropout_rate = [0,0.1,0.5]
+epochs = [300]
+batch_size = [l/100]
+learn_rate = [0.003]
+dropout_rate = [0,0.5]
 
 begin = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
 
-#param_grid = dict(neurons=neurons, layers=layers, epochs=epochs, batch_size=batch_size, learn_rate=learn_rate, dropout_rate=dropout_rate)
-param_grid = dict(epochs=epochs,batch_size=batch_size,dropout_rate=dropout_rate)
+param_grid = dict(neurons=neurons, layers=layers, epochs=epochs, batch_size=batch_size, learn_rate=learn_rate, dropout_rate=dropout_rate)
 param_dist = dict(neurons=neurons, layers=layers, epochs=epochs, batch_size=batch_size, learn_rate=learn_rate, dropout_rate=dropout_rate)
 #param_dist = dict(epochs=epochs,batch_size=batch_size,dropout_rate=dropout_rate)
 
@@ -57,10 +56,10 @@ scoring = 'accuracy'
 #scoring = 'roc_auc'
 #scoring = scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
 
-#grid = GridSearchCV(estimator = model, param_grid = param_grid, scoring=scoring, n_jobs=3) #n_jobs = -1 -> Total number of CPU/GPU cores
-grid = RandomizedSearchCV(estimator = model, param_distributions = param_dist, n_iter=n_iter_search,n_jobs=3) #n_jobs = -1 -> Total number of CPU/GPU cores
+grid = GridSearchCV(estimator = model, param_grid = param_grid, scoring=scoring, n_jobs=3) #n_jobs = -1 -> Total number of CPU/GPU cores
+#grid = RandomizedSearchCV(estimator = model, param_distributions = param_dist, n_iter=n_iter_search,n_jobs=3)
 
-gridType = 'rS'
+gridType = 'gS'
 
 print("Starting the training")
 start = time.time()

@@ -19,7 +19,7 @@ suffix = "_skimmed"
 luminosity = 35866
 number_of_events_print = 0
 test_point = "550_520"
-train_DM = "DM30"
+train_DM = "550_520"
 
 print "Loading datasets..."
 dataDev, dataVal = StopDataLoader(cfg.loc, inputBranches, selection=preselection, suffix=suffix, signal=train_DM, test=test_point, fraction=fraction)

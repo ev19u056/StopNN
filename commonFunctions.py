@@ -248,3 +248,8 @@ def myClassifier(nIn, nOut, compileArgs, dropout_rate=0.0, learn_rate=0.001):
     compileArgs['optimizer'] = optimizer
     model.compile(**compileArgs)
     return model
+
+def arange(array, min, max):
+    for i in range(min,max+1):
+        array = array + [i]
+    return array

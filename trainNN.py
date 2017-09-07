@@ -8,26 +8,26 @@ import pandas
 #from keras.layers import Dense, Dropout, AlphaDropout
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
 import matplotlib.pyplot as plt
-from commonFunctions import getYields, FullFOM, myClassifier
+from commonFunctions import getYields, FullFOM, myClassifier, gridClassifier
 #from scipy.stats import ks_2samp
 import localConfig as cfg
 from prepareDATA import *
 
 
-n_neurons = 20
+n_neurons = 15
 n_layers = 3
-n_epochs = 50
-batch_size = len(XDev)/1000
-learning_rate = 0.001/5.0
-dropout_rate = 0.1
+n_epochs = 300
+batch_size = len(XDev)/5
+learning_rate = 0.01/5.0
+dropout_rate = 0.0
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
 trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
 myAdam = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myAdam
 
-#name = "myNN_N"+str(n_neurons)+"_L"+str(n_layers)+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
-name = "myNN_MC"+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
+name = "myNN_N"+str(n_neurons)+"_L"+str(n_layers)+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
+#name = "myNN_MC"+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
 
 filepath = cfg.lgbk+name
 os.mkdir(filepath)
@@ -37,7 +37,8 @@ print("Starting the training")
 start = time.time()
 #call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
 #model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate)
-model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
+#model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
+model = gridClassifier(nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,layers=n_layers,neurons=n_neurons,learn_rate=learning_rate,dropout_rate=dropout_rate)
 history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,shuffle=True, **trainParams)
 print("Training took ", time.time()-start, " seconds")
 
