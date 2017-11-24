@@ -1,3 +1,7 @@
+'''
+Functions used in different files are gathered here to avoid redundance.
+'''
+
 import root_numpy
 import pandas
 import numpy as np
@@ -6,33 +10,38 @@ from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam
 from math import log
 
+# Signal Dataset
+
 signalMap = {
-              "DM30" : ["T2DegStop_250_220", 
-                        "T2DegStop_275_245", 
-                        "T2DegStop_300_270", 
-                        "T2DegStop_325_295", 
-                        "T2DegStop_350_320", 
-                        "T2DegStop_375_345", 
-                        "T2DegStop_400_370", 
-                        "T2DegStop_425_395", 
-                        "T2DegStop_450_420", 
-                        "T2DegStop_475_445", 
-                        "T2DegStop_500_470", 
-                        "T2DegStop_525_495", 
-                        "T2DegStop_550_520", 
-                        "T2DegStop_575_545", 
-                        "T2DegStop_600_570", 
-                        "T2DegStop_625_595", 
-                        "T2DegStop_650_620", 
-                        "T2DegStop_675_645", 
-                        "T2DegStop_700_670", 
-                        "T2DegStop_725_695", 
-                        "T2DegStop_750_720", 
-                        "T2DegStop_775_745", 
+              "DM30" : ["T2DegStop_250_220",
+                        "T2DegStop_275_245",
+                        "T2DegStop_300_270",
+                        "T2DegStop_325_295",
+                        "T2DegStop_350_320",
+                        "T2DegStop_375_345",
+                        "T2DegStop_400_370",
+                        "T2DegStop_425_395",
+                        "T2DegStop_450_420",
+                        "T2DegStop_475_445",
+                        "T2DegStop_500_470",
+                        "T2DegStop_525_495",
+                        "T2DegStop_550_520",
+                        "T2DegStop_575_545",
+                        "T2DegStop_600_570",
+                        "T2DegStop_625_595",
+                        "T2DegStop_650_620",
+                        "T2DegStop_675_645",
+                        "T2DegStop_700_670",
+                        "T2DegStop_725_695",
+                        "T2DegStop_750_720",
+                        "T2DegStop_775_745",
                         "T2DegStop_800_770"],
               "300_270" : ["T2DegStop_300_270"],
               "550_520" : ["T2DegStop_550_520"]
             }
+
+# Background Dataset
+
 bkgDatasets = [
                 "Wjets_70to100",
                 "Wjets_100to200",
@@ -54,6 +63,7 @@ bkgDatasets = [
                 "ZJetsToNuNu_HT2500toInf"
               ]
 
+# Load the Data
 
 def StopDataLoader(path, features, test="550_520", selection="", treename="bdttree", suffix="", signal="DM30", fraction=1.0):
   if signal not in signalMap:
@@ -69,10 +79,12 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   if "weight" not in features:
     features.append("weight")
 
+  # Train and Test Data split for Signal
+
   sigDev = None
   sigVal = None
-  
-  
+
+
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
                                 path + "test/" + sigName_test + suffix + ".root",
@@ -86,7 +98,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
       sigVal = pandas.DataFrame(tmp)
     else:
       sigVal = sigVal.append(pandas.DataFrame(tmp), ignore_index=True)
-    
+
 
   for sigName in signalMap[signal]:
     tmp = root_numpy.root2array(
@@ -102,7 +114,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
     else:
       sigDev = sigDev.append(pandas.DataFrame(tmp), ignore_index=True)
 
-
+  # Train and Test Data split for Background
 
   bkgDev = None
   bkgVal = None
@@ -132,6 +144,8 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
       bkgVal = pandas.DataFrame(tmp)
     else:
       bkgVal = bkgVal.append(pandas.DataFrame(tmp), ignore_index=True)
+
+  # Data Labelling
 
   sigDev["category"] = 1
   sigVal["category"] = 1
@@ -164,7 +178,9 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   val = val.append(bkgVal.copy(), ignore_index=True)
 
   return dev, val
-  
+
+#Calculate FOM
+
 def FOM1(sIn, bIn):
     s, sErr = sIn
     b, bErr = bIn
@@ -189,13 +205,13 @@ def FullFOM(sIn, bIn, fValue=0.2):
     return (fom, fomErr)
 
 def getYields(dataVal, cut=0.5, luminosity=35866, splitFactor=2):
-    #defines the selected test data 
+    #defines the selected test data
     selectedVal = dataVal[dataVal.NN>cut]
-            
+
     #separates the true positives from false negatives
     selectedSig = selectedVal[selectedVal.category == 1]
     selectedBkg = selectedVal[selectedVal.category == 0]
-            
+
     sigYield = selectedSig.weight.sum()
     sigYieldUnc = np.sqrt(np.sum(np.square(selectedSig.weight)))
     bkgYield = selectedBkg.weight.sum()
@@ -209,11 +225,12 @@ def getYields(dataVal, cut=0.5, luminosity=35866, splitFactor=2):
     return ((sigYield, sigYieldUnc), (bkgYield, bkgYieldUnc))
 
 # Classifiers
+
 def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate):
   model = Sequential()
   model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
   for i in range(0,layers-1):
-      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))  
+      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
       model.add(Dropout(dropout_rate))
   model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
   model.compile(**compileArgs)
@@ -248,6 +265,8 @@ def myClassifier(nIn, nOut, compileArgs, dropout_rate=0.0, learn_rate=0.001):
     compileArgs['optimizer'] = optimizer
     model.compile(**compileArgs)
     return model
+
+# Selected range
 
 def arange(array, min, max):
     for i in range(min,max+1):

@@ -1,3 +1,7 @@
+'''
+Train the Neural Network
+'''
+
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 from keras.optimizers import Adam
@@ -14,10 +18,10 @@ import localConfig as cfg
 from prepareDATA import *
 
 
-n_neurons = 15
-n_layers = 3
-n_epochs = 300
-batch_size = len(XDev)/5
+n_neurons = 25
+n_layers = 2
+n_epochs = 500
+batch_size = len(XDev)/10
 learning_rate = 0.01/5.0
 dropout_rate = 0.0
 

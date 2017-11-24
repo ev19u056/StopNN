@@ -1,3 +1,7 @@
+"""
+Prepare Data for processing
+"""
+
 #!/usr/bin/env python
 
 import root_numpy
@@ -28,13 +32,13 @@ dataDev, dataVal = StopDataLoader(cfg.loc, inputBranches, selection=preselection
 '''
 if number_of_events_print == 1:
     np_dataDev, np_dataVal = StopDataLoader(cfg.loc, inputBranches, suffix=suffix, signal=train_DM, test=test_point) #
-    print " ==> BEFORE PRE-SELECTION:"        
+    print " ==> BEFORE PRE-SELECTION:"
     print "     Train Signal Events:", len(np_dataDev[np_dataDev.category==1])
     print "     Train Background Events:",len(np_dataDev[np_dataDev.category==0])
     print "     Test Signal Events:", len(np_dataVal[np_dataVal.category==1])
-    print "     Test Background Events:", len(np_dataVal[np_dataVal.category==0])        
+    print "     Test Background Events:", len(np_dataVal[np_dataVal.category==0])
     print ""
-    print " ==> AFTER PRE-SELECTION:"        
+    print " ==> AFTER PRE-SELECTION:"
     print "     Train Signal Events:", len(dataDev[dataDev.category==1])
     print "     Train Background Events:",len(dataDev[dataDev.category==0])
     print "     Test Signal Events:", len(dataVal[dataVal.category==1])

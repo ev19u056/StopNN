@@ -1,3 +1,7 @@
+'''
+Plot the results of a Grid Search
+'''
+
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -30,7 +34,7 @@ for line in range(5,len(data)-1):
     l = data[line].split(" ")
     accuracy.append(float(l[0]))
     std_accuracy.append(float(l[2].replace('(','').replace(')','')))
-    
+
     findParam(l,'layers',layers)
     findParam(l,'learn_rate',learn_rate)
     findParam(l,'dropout_rate',dropout_rate)
@@ -72,7 +76,7 @@ print layers
 print "\n"
 print learn_rate
 print "\n"
-print dropout_rate 
+print dropout_rate
 print "\n"
 print batch_size
 print "\n"

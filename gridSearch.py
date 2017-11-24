@@ -1,4 +1,6 @@
 '''
+Tune Neural Network Hyperparameters using a Grid Search or a Randomized Grid Search
+
 Code inspired from: https://machinelearningmastery.com/grid-search-hyperparameters-deep-learning-models-python-keras/
 '''
 import os
@@ -13,7 +15,7 @@ from keras.constraints import maxnorm
 from sklearn.metrics import make_scorer, accuracy_score, roc_auc_score
 from prepareDATA import *
 import localConfig as cfg
-import datetime 
+import datetime
 from scipy.stats import randint, uniform
 
 from commonFunctions import gridClassifier, myClassifier, arange
@@ -28,7 +30,7 @@ l=len(XDev)
 seed = 42
 np.random.seed(seed)
 
-# Tune the Number of Neurons in the Hidden Layer 
+# Tune the Number of Neurons in the Hidden Layer
 
 model = KerasClassifier(build_fn=gridClassifier,nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs, batch_size=20, verbose = 1)
 #model = KerasClassifier(build_fn=myClassifier,nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,batch_size=20, verbose = 1)
@@ -64,7 +66,7 @@ gridType = 'gS'
 print("Starting the training")
 start = time.time()
 
-#dataVal["NN"] = valPredict 
+#dataVal["NN"] = valPredict
 grid_result = grid.fit(XDev,YDev)
 #grid_result = grid.fit(dataVal.category,dataVal.NN)
 
