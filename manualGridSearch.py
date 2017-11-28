@@ -33,7 +33,12 @@ myAdam = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myAdam
 
 print "Opening file"
-f = open('trainNN_outputs_run13_'+test_point+'.txt', 'w')
+
+runNum = 1
+name = "mGS:outputs_run"+str(runNum)+"_"
+filepath = cfg.lgbk+"Searches/"+name
+
+f = open(filepath+test_point+'.txt', 'w')
 
 def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
     model = Sequential()

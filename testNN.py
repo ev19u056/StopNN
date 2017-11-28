@@ -24,7 +24,9 @@ import sys
 from keras.models import model_from_json
 from prepareDATA import *
 
-model_name = "myNN_N15_L3_E300_B24902_Lr0.002_Dr0.0_Dev550_520_Val550_520"
+#model_name = "myNN_N15_L3_E300_B24902_Lr0.002_Dr0.0_Dev550_520_Val550_520"
+
+model_name = "newDATA_N25_L2_E300_B30000_Lr0.003_Dr0.0_Dev550_520_Val550_520"
 
 filepath = cfg.lgbk+model_name
 os.chdir(filepath)

@@ -20,9 +20,9 @@ from prepareDATA import *
 
 n_neurons = 25
 n_layers = 2
-n_epochs = 500
-batch_size = len(XDev)/10
-learning_rate = 0.01/5.0
+n_epochs = 300
+batch_size = 30000 #len(XDev)/10
+learning_rate = 0.003
 dropout_rate = 0.0
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
@@ -30,7 +30,7 @@ trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
 myAdam = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myAdam
 
-name = "myNN_N"+str(n_neurons)+"_L"+str(n_layers)+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
+name = "newDATA_N"+str(n_neurons)+"_L"+str(n_layers)+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
 #name = "myNN_MC"+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
 
 filepath = cfg.lgbk+name
@@ -129,5 +129,7 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.savefig(name+'.png')
 #plt.savefig('NN2_'+str(y)+''+str(x)+''+test_point+"_"+str(max_FOM)+'.png')
+
+print "Model name: "+name
 
 sys.exit("Done!")
