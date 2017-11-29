@@ -7,11 +7,11 @@ import localConfig as cfg
 from prepareDATA import test_point
 
 runNum = 1
-name = "mGS:outputs_run"+str(runNum)+"_"+test_point
-filepath = cfg.lgbk+"Searches/"
+filepath = cfg.lgbk+"Searches/run"+str(runNum)
 os.chdir(filepath)
 
-f = open(filepath+name+'.txt', 'r')
+#f = open(filepath+name+'.txt', 'r')
+name = "mGS:outputs_run"+str(runNum)+"_"+test_point
 f = open(name + '.txt', 'r')
 
 layer = []

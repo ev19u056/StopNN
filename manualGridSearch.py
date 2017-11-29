@@ -35,10 +35,18 @@ compileArgs['optimizer'] = myAdam
 print "Opening file"
 
 runNum = 1
-name = "mGS:outputs_run"+str(runNum)+"_"
-filepath = cfg.lgbk+"Searches/"+name
+filepath = cfg.lgbk+"Searches/"
 
-f = open(filepath+test_point+'.txt', 'w')
+while os.path.exists(filepath+"run"+str(runNum)):
+    runNum += 1
+
+filepath = filepath+"run"+str(runNum)
+
+os.mkdir(filepath)
+os.chdir(filepath)
+
+name = "mGS:outputs_run"+str(runNum)+"_"+test_point
+f = open(name+'.txt', 'w')
 
 def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
     model = Sequential()
@@ -50,13 +58,13 @@ def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
     return model
 
 for y in [1,2,3]:   # LAYERS
-    for x in range(15, 20):    # NEURONS
+    for x in range(1, 101):    # NEURONS
         print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
 
         print("Starting the training")
         model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
         history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
-        name = "myNN_run13_L"+str(y)+"_N"+str(x)+"_"+train_DM
+        name = "myNN_"+"run"+str(runNum)+"_L"+str(y)+"_N"+str(x)+"_"+train_DM
         model.save(name+".h5")
         model_json = model.to_json()
         with open(name + ".json", "w") as json_file:
