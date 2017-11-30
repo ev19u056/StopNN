@@ -4,9 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import localConfig as cfg
-from prepareDATA import test_point
+#from prepareDATA import test_point
 
 runNum = 1
+test_point = "550_520"
 filepath = cfg.lgbk+"Searches/run"+str(runNum)
 os.chdir(filepath)
 
@@ -41,18 +42,18 @@ for line in f:
         FOM.append(float(line,))
     line_index=line_index+1
 
-layers_legend = ["1 layer","2 layers", "3 layers", "4 layers", "5 layers"]
-
+layers_legend = ["1 layer","2 layers", "3 layers"]
+nLayers = len(layers_legend)
 
 plt.figure(figsize=(7,6))
 plt.xlabel("Number of Neurons")
 plt.ylabel('Roc AUC')
 plt.suptitle("Roc curve integral for several configurations of Neural Nets", fontsize=13, fontweight='bold')
 # ===> TEM QUE SE AJUSTAR BEM O INICIO E FIM DAS LISTAS PARA CRIAR UMA LINAH POR LAYER/OUTRO PARAMETRO
-print neurons
-plt.plot(neurons[0:5], roc_AUC[0:5])
-plt.plot(neurons[5:10], roc_AUC[5:10])
-plt.plot(neurons[10:15], roc_AUC[10:15])
+lim = len(neurons)/nLayers
+
+for i in range(0,nLayers):
+    plt.plot(neurons[i*lim:(i+1)*lim], roc_AUC[i*lim:(i+1)*lim])
 
 
 '''
