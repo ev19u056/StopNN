@@ -57,7 +57,7 @@ def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
     model.compile(**compileArgs)
     return model
 
-for y in [1]:   # LAYERS
+for y in [1,2,3]:   # LAYERS
     for x in range(2, 101):    # NEURONS
         print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
 
