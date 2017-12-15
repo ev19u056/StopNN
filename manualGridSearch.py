@@ -17,7 +17,7 @@ from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from scipy.stats import ks_2samp
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import localConfig as cfg
 from commonFunctions import StopDataLoader, FullFOM, getYields
 
@@ -27,7 +27,7 @@ from math import log
 from prepareDATA import *
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-trainParams = {'epochs': 300, 'batch_size': 30000, 'verbose': 1}
+trainParams = {'epochs': 300, 'batch_size': 30000, 'verbose': 0}
 learning_rate = 0.003
 myAdam = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myAdam
@@ -58,7 +58,7 @@ def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
     return model
 
 for y in [1,2,3]:   # LAYERS
-    for x in range(1, 101):    # NEURONS
+    for x in range(2, 101):    # NEURONS
         print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
 
         print("Starting the training")
@@ -77,8 +77,8 @@ for y in [1,2,3]:   # LAYERS
 
         print("Getting scores")
 
-        scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 1)
-        scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 1)
+        scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
+        scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
         cohen_kappa=cohen_kappa_score(YVal, valPredict.round())
 
         print "Calculating FOM:"
@@ -137,7 +137,7 @@ for y in [1,2,3]:   # LAYERS
         f.write(str(km_value_b)+"\n")
         f.write(str(km_value)+"\n")
         f.write(str(max_FOM)+"\n")
-
+'''
         print "Plotting"
 
         plt.figure(figsize=(7,6))
@@ -182,5 +182,5 @@ for y in [1,2,3]:   # LAYERS
         plt.legend(['train', 'test'], loc='upper left')
         plt.savefig("evo_"+name+'.png')
         #plt.show()
-
+'''
 sys.exit("Done!")
