@@ -17,7 +17,7 @@ from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from scipy.stats import ks_2samp
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import localConfig as cfg
 from commonFunctions import StopDataLoader, FullFOM, getYields
 
@@ -137,7 +137,7 @@ for y in [1,2,3]:   # LAYERS
         f.write(str(km_value_b)+"\n")
         f.write(str(km_value)+"\n")
         f.write(str(max_FOM)+"\n")
-
+'''
         print "Plotting"
 
         plt.figure(figsize=(7,6))
@@ -182,5 +182,5 @@ for y in [1,2,3]:   # LAYERS
         plt.legend(['train', 'test'], loc='upper left')
         plt.savefig("evo_"+name+'.png')
         #plt.show()
-
+'''
 sys.exit("Done!")
