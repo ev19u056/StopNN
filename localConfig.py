@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
 #path to .root datasets
-loc = "/home/diogo/LIP/DATA/"
+loc = "/lstore/cms/cbeiraod/Stop4Body/"
 #path to logbook
-lgbk = "/home/diogo/LIP/LogBook/"
+lgbk = "/lstore/cms/dbastos/LogBook/"

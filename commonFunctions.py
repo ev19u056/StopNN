@@ -87,7 +87,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
 
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
-                                path + "test/" + sigName_test + suffix + ".root",
+                                path + "nTuples_v2017-10-19_test_skimmed/" + sigName_test + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -102,7 +102,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
 
   for sigName in signalMap[signal]:
     tmp = root_numpy.root2array(
-                                path + "train/" + sigName + suffix + ".root",
+                                path + "nTuples_v2017-10-19_train_skimmed/" + sigName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -120,7 +120,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   bkgVal = None
   for bkgName in bkgDatasets:
     tmp = root_numpy.root2array(
-                                path + "/train/" + bkgName + suffix + ".root",
+                                path + "/nTuples_v2017-10-19_train_skimmed/" + bkgName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -133,7 +133,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
       bkgDev = bkgDev.append(pandas.DataFrame(tmp), ignore_index=True)
 
     tmp = root_numpy.root2array(
-                                path + "/test/" + bkgName + suffix + ".root",
+                                path + "/nTuples_v2017-10-19_test_skimmed/" + bkgName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
