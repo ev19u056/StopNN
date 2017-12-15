@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import localConfig as cfg
 #from prepareDATA import test_point
 
-runNum = 1
+runNum = 2 
 test_point = "550_520"
 filepath = cfg.lgbk+"Searches/run"+str(runNum)
 os.chdir(filepath)

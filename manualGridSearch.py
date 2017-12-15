@@ -64,7 +64,7 @@ for y in [1,2,3]:   # LAYERS
         print("Starting the training")
         model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
         history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
-        name = "myNN_"+"run"+str(runNum)+"_L"+str(y)+"_N"+str(x)+"_"+train_DM
+        name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
         model.save(name+".h5")
         model_json = model.to_json()
         with open(name + ".json", "w") as json_file:
