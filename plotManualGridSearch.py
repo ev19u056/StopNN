@@ -5,10 +5,8 @@ import localConfig as cfg
 from keras.models import model_from_json
 from sklearn.metrics import confusion_matrix, cohen_kappa_score, roc_curve, roc_auc_score
 from prepareDATA import *
-
-#added a la pato
-#from commonFunctions import StopDataLoader, FOM1, FOM2, FullFOM, getYields
-#####
+from commonFunctions import FOM1, FOM2, FullFOM, getYields
+#StopDataLoader
 
 runNum = 3
 model_name = "L2_N25_550_520_run3"
@@ -36,6 +34,25 @@ bkg_dataDev=dataDev[dataDev.category==0]
 sig_dataVal=dataVal[dataVal.category==1]
 bkg_dataVal=dataVal[dataVal.category==0]
 
+fomEvo = []
+fomCut = []
+
+bkgEff = []
+sigEff = []
+
+sig_Init = dataVal[dataVal.category == 1].weight.sum() * 35866 * 2
+bkg_Init = dataVal[dataVal.category == 0].weight.sum() * 35866 * 2
+
+for cut in np.arange(0.0, 0.9999, 0.001):
+    sig, bkg = getYields(dataVal, cut=cut, luminosity=luminosity)
+    if sig[0] > 0 and bkg[0] > 0:
+        fom, fomUnc = FullFOM(sig, bkg)
+        fomEvo.append(fom)
+        fomCut.append(cut)
+        bkgEff.append(bkg[0]/bkg_Init)
+        sigEff.append(sig[0]/sig_Init)
+
+
 print "Plotting"
 plt.figure(figsize=(7,6))
 plt.hist(sig_dataDev["NN"], 50, facecolor='blue', alpha=0.7, normed=1, weights=sig_dataDev["weight"])
@@ -48,16 +65,15 @@ plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweigh
 plt.legend(['Signal (Test sample)', 'Background (Test sample)', 'Signal (Train sample)', 'Background (Train sample)'], loc='upper right')
 plt.savefig('hist_'+model_name+'.png', bbox_inches='tight')
 
-'''
 plt.figure(figsize=(7,6))
 plt.plot(bkgEff, sigEff)
 plt.title("Roc curve", fontweight='bold')
 plt.ylabel("Signal efficiency")
 plt.xlabel("Bakcground efficiency")
 plt.axis([0, 1, 0, 1])
-plt.legend(["Roc curve integral: {0}".format(roc_Integral)], loc='best')
-plt.savefig('Roc_'+name+'.png', bbox_inches='tight')
-
+#plt.legend(["Roc curve integral: {0}".format(roc_Integral)], loc='best')
+plt.savefig('Roc_'+model_name+'.png', bbox_inches='tight')
+'''
 plt.figure(figsize=(7,6))
 plt.subplots_adjust(hspace=0.5)
 plt.subplot(211)
