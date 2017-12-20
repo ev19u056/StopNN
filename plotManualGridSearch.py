@@ -1,10 +1,20 @@
+import os
 import keras
 import matplotlib.pyplot as plt
+import localConfig as cfg
+from keras.models import model_from_json
+from sklearn.metrics import confusion_matrix, cohen_kappa_score, roc_curve, roc_auc_score
+
+
+#added a la pato
+#from commonFunctions import StopDataLoader, FOM1, FOM2, FullFOM, getYields
+#from prepareDATA import *
+#####
 
 runNum = 3
 model_name = "L2_N25_550_520_run3"
 
-filepath = cfg.lgbk+"Searches/"+str(runNum)
+filepath = cfg.lgbk+"Searches/run"+str(runNum)
 os.chdir(filepath)
 
 print "Loading Model ..."
