@@ -20,7 +20,7 @@ from scipy.stats import randint, uniform
 
 from commonFunctions import gridClassifier, myClassifier, arange
 
-os.chdir(cfg.lgbk+"Searches")
+os.chdir(cfg.lgbk+"Searches/")
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
 
@@ -32,20 +32,20 @@ np.random.seed(seed)
 
 # Tune the Number of Neurons in the Hidden Layer
 
-model = KerasClassifier(build_fn=gridClassifier,nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs, batch_size=20, verbose = 1)
+model = KerasClassifier(build_fn=gridClassifier,nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs, batch_size=20, verbose = 0)
 #model = KerasClassifier(build_fn=myClassifier,nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,batch_size=20, verbose = 1)
 
 #Hyperparameters
-n_iter_search = 40
+n_iter_search = 200
 
-neurons = arange([],1,20)
-#neurons = randint(5, 50)
-layers = arange([],1,3)
-#layers = randint(1,3)
+#neurons = arange([],1,20)
+neurons = randint(5, 50)
+#layers = arange([],1,3)
+layers = randint(1,5)
 #epochs = [15]
-epochs = [300]
-batch_size = [l/100]
-learn_rate = [0.003]
+epochs = [100]
+batch_size = l/(randint(1,1000))
+learn_rate = 1/(randint(10,1000))
 dropout_rate = [0,0.5]
 
 begin = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
@@ -58,10 +58,10 @@ scoring = 'accuracy'
 #scoring = 'roc_auc'
 #scoring = scoring = {'AUC': 'roc_auc', 'Accuracy': make_scorer(accuracy_score)}
 
-grid = GridSearchCV(estimator = model, param_grid = param_grid, scoring=scoring, n_jobs=3) #n_jobs = -1 -> Total number of CPU/GPU cores
-#grid = RandomizedSearchCV(estimator = model, param_distributions = param_dist, n_iter=n_iter_search,n_jobs=3)
+#grid = GridSearchCV(estimator = model, param_grid = param_grid, scoring=scoring, n_jobs=3) #n_jobs = -1 -> Total number of CPU/GPU cores
+grid = RandomizedSearchCV(estimator = model, param_distributions = param_dist, n_iter=n_iter_search,n_jobs=-1)
 
-gridType = 'gS'
+gridType = 'rS'
 
 print("Starting the training")
 start = time.time()
