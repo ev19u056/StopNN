@@ -4,11 +4,10 @@ import matplotlib.pyplot as plt
 import localConfig as cfg
 from keras.models import model_from_json
 from sklearn.metrics import confusion_matrix, cohen_kappa_score, roc_curve, roc_auc_score
-
+from prepareDATA import *
 
 #added a la pato
 #from commonFunctions import StopDataLoader, FOM1, FOM2, FullFOM, getYields
-#from prepareDATA import *
 #####
 
 runNum = 3
@@ -45,9 +44,9 @@ plt.hist(sig_dataVal["NN"], 50, color='blue', alpha=1, normed=1, weights=sig_dat
 plt.hist(bkg_dataVal["NN"], 50, color='red', alpha=1, normed=1, weights=bkg_dataVal["weight"], histtype="step")
 plt.xlabel('NN output')
 plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweight='bold')
-plt.title("Roc Curve AUC: {0} \nKolmogorov Smirnov test (s,b,s+b): ({1}, {2}, {3})".format(roc_Integral, km_value_s, km_value_b, km_value), fontsize=10)
+#plt.title("Roc Curve AUC: {0} \nKolmogorov Smirnov test (s,b,s+b): ({1}, {2}, {3})".format(roc_Integral, km_value_s, km_value_b, km_value), fontsize=10)
 plt.legend(['Signal (Test sample)', 'Background (Test sample)', 'Signal (Train sample)', 'Background (Train sample)'], loc='upper right')
-plt.savefig('hist_'+name+'.png', bbox_inches='tight')
+plt.savefig('hist_'+model_name+'.png', bbox_inches='tight')
 
 '''
 plt.figure(figsize=(7,6))
