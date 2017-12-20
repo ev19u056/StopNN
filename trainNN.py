@@ -33,8 +33,11 @@ compileArgs['optimizer'] = myAdam
 name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_TP"+test_point
 
 filepath = cfg.lgbk+"SingleNN/"+name
-os.mkdir(filepath)
+
+if os.path.exists(filepath) == False:
+    os.mkdir(filepath)
 os.chdir(filepath)
+
 print("Dir "+filepath+" created.")
 print("Starting the training")
 start = time.time()
