@@ -26,7 +26,7 @@ learning_rate = 0.003
 dropout_rate = 0.0
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
+trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 0}
 myAdam = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myAdam
 
@@ -58,8 +58,8 @@ valPredict = model.predict(XVal)
 
 print("Getting scores")
 
-scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 1)
-scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 1)
+scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
+scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
 
 
 print "Calculating FOM:"
