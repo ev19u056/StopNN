@@ -13,6 +13,8 @@
 #...$ -v SGEOUT=accuracy.pickle
 #...$ -v SGEOUT=loss.pickle
 
+#$ -l gpu
+
 cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/
 
 module load root-6.10.02
