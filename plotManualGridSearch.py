@@ -1,4 +1,31 @@
+import keras
 import matplotlib.pyplot as plt
+
+runNum = 3
+model_name = "L2_N25_550_520_run3"
+
+filepath = cfg.lgbk+"Searches/"+str(runNum)
+os.chdir(filepath)
+
+print "Loading Model ..."
+with open(model_name+'.json', 'r') as json_file:
+  loaded_model_json = json_file.read()
+model = model_from_json(loaded_model_json)
+model.load_weights(model_name+".h5")
+model.compile(loss = 'binary_crossentropy', optimizer = 'adam')
+
+print("Getting predictions")
+devPredict = model.predict(XDev)
+valPredict = model.predict(XVal)
+
+print "Calculating parameters"
+dataDev["NN"] = devPredict
+dataVal["NN"] = valPredict
+
+sig_dataDev=dataDev[dataDev.category==1]
+bkg_dataDev=dataDev[dataDev.category==0]
+sig_dataVal=dataVal[dataVal.category==1]
+bkg_dataVal=dataVal[dataVal.category==0]
 
 print "Plotting"
 plt.figure(figsize=(7,6))
@@ -11,6 +38,8 @@ plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweigh
 plt.title("Roc Curve AUC: {0} \nKolmogorov Smirnov test (s,b,s+b): ({1}, {2}, {3})".format(roc_Integral, km_value_s, km_value_b, km_value), fontsize=10)
 plt.legend(['Signal (Test sample)', 'Background (Test sample)', 'Signal (Train sample)', 'Background (Train sample)'], loc='upper right')
 plt.savefig('hist_'+name+'.png', bbox_inches='tight')
+
+'''
 plt.figure(figsize=(7,6))
 plt.plot(bkgEff, sigEff)
 plt.title("Roc curve", fontweight='bold')
@@ -19,6 +48,7 @@ plt.xlabel("Bakcground efficiency")
 plt.axis([0, 1, 0, 1])
 plt.legend(["Roc curve integral: {0}".format(roc_Integral)], loc='best')
 plt.savefig('Roc_'+name+'.png', bbox_inches='tight')
+
 plt.figure(figsize=(7,6))
 plt.subplots_adjust(hspace=0.5)
 plt.subplot(211)
@@ -38,3 +68,4 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.savefig("evo_"+name+'.png')
 #plt.show()
+'''
