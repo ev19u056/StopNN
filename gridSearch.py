@@ -44,8 +44,8 @@ neurons = randint(5, 50)
 layers = randint(1,5)
 #epochs = [15]
 epochs = [100]
-batch_size = l/(randint(1,1000))
-learn_rate = 1/(randint(10,1000))
+batch_size = (randint(l/1000,l/10))
+learn_rate = (randint(1/10,1/1000))
 dropout_rate = [0,0.5]
 
 begin = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
