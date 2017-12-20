@@ -30,10 +30,9 @@ trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
 myAdam = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myAdam
 
-name = "newDATA_N"+str(n_neurons)+"_L"+str(n_layers)+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
-#name = "myNN_MC"+"_E"+str(n_epochs)+"_B"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_Dev"+train_DM+"_Val"+test_point
+name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_TP"+test_point
 
-filepath = cfg.lgbk+name
+filepath = cfg.lgbk+"SingleNN/"+name
 os.mkdir(filepath)
 os.chdir(filepath)
 print("Dir "+filepath+" created.")
