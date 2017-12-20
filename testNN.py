@@ -25,9 +25,13 @@ from keras.models import model_from_json
 from prepareDATA import *
 
 runNum = 3
-model_name = "L1_N30_550_520_run3"
+# Plot Grid Search Output Model
+#model_name = "L1_N30_550_520_run3"
+#filepath = cfg.lgbk+"Searches/run"+str(runNum)
 
-filepath = cfg.lgbk+"Searches/run"+str(runNum)
+# Plot Single NN
+model_name = "L2_N25_E300_Bs30000_Lr0.0003_Dr0.0_TP550_520"
+filepath = cfg.lgbk+"SingleNN/"+model_name
 os.chdir(filepath)
 
 print "Loading Model ..."
