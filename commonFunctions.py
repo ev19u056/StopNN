@@ -84,10 +84,12 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
+  testPath = "nTuples_v2017-10-19_test_skimmed/"
+  trainPath = "nTuples_v2017-10-19_train_skimmed/"
 
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
-                                path + "nTuples_v2017-10-19_test_skimmed/" + sigName_test + suffix + ".root",
+                                path + testPath + sigName_test + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -102,7 +104,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
 
   for sigName in signalMap[signal]:
     tmp = root_numpy.root2array(
-                                path + "nTuples_v2017-10-19_train_skimmed/" + sigName + suffix + ".root",
+                                path + trainPath + sigName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -120,7 +122,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   bkgVal = None
   for bkgName in bkgDatasets:
     tmp = root_numpy.root2array(
-                                path + "/nTuples_v2017-10-19_train_skimmed/" + bkgName + suffix + ".root",
+                                path + trainPath + bkgName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -133,7 +135,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
       bkgDev = bkgDev.append(pandas.DataFrame(tmp), ignore_index=True)
 
     tmp = root_numpy.root2array(
-                                path + "/nTuples_v2017-10-19_test_skimmed/" + bkgName + suffix + ".root",
+                                path + testPath + bkgName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
