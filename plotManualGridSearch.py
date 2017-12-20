@@ -2,7 +2,7 @@ import os
 import keras
 import matplotlib.pyplot as plt
 import localConfig as cfg
-from keras.models import model_from_json
+from keras.models import model_from_json, Sequential
 from sklearn.metrics import confusion_matrix, cohen_kappa_score, roc_curve, roc_auc_score
 from prepareDATA import *
 from commonFunctions import FOM1, FOM2, FullFOM, getYields
@@ -73,6 +73,9 @@ plt.xlabel("Bakcground efficiency")
 plt.axis([0, 1, 0, 1])
 #plt.legend(["Roc curve integral: {0}".format(roc_Integral)], loc='best')
 plt.savefig('Roc_'+model_name+'.png', bbox_inches='tight')
+
+print 
+
 '''
 plt.figure(figsize=(7,6))
 plt.subplots_adjust(hspace=0.5)
@@ -93,4 +96,3 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.savefig("evo_"+name+'.png')
 #plt.show()
-'''
