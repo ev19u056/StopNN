@@ -13,4 +13,5 @@ scaler.sav
 localConfig.py
 mvFiles.sh
 init.sh
+clean.sh
 *.sh.*

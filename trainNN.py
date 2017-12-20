@@ -22,7 +22,7 @@ n_neurons = 25
 n_layers = 2
 n_epochs = 300
 batch_size = 30000 #len(XDev)/10
-learning_rate = 0.003
+learning_rate = 0.0003
 dropout_rate = 0.0
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
