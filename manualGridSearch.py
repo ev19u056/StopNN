@@ -20,7 +20,7 @@ from scipy.stats import ks_2samp
 #import matplotlib.pyplot as plt
 import localConfig as cfg
 from commonFunctions import StopDataLoader, FullFOM, getYields
-
+import pickle
 import sys
 from math import log
 
@@ -58,12 +58,20 @@ def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
     return model
 
 for y in [1,2,3]:   # LAYERS
-    for x in range(2, 101):    # NEURONS
+    for x in range(1, 101):    # NEURONS
         print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
 
         print("Starting the training")
         model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
         history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
+        acc = history.history["acc"]
+        #val_acc = history.history['val_acc']
+        loss = history.history['loss']
+        #val_loss = history.history['val_loss']
+        pickle.dump(acc, open("accuracy.pickle", "wb"))
+        pickle.dump(loss, open("loss.pickle", "wb"))
+
+
         name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
         model.save(name+".h5")
         model_json = model.to_json()
