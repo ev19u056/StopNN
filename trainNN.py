@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from commonFunctions import getYields, FullFOM, myClassifier, gridClassifier
 #from scipy.stats import ks_2samp
 import localConfig as cfg
+import pickle
 from prepareDATA import *
 
 
@@ -46,6 +47,15 @@ start = time.time()
 #model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
 model = gridClassifier(nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,layers=n_layers,neurons=n_neurons,learn_rate=learning_rate,dropout_rate=dropout_rate)
 history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,shuffle=True, **trainParams)
+acc = history.history["acc"]
+val_acc = history.history['val_acc']
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+pickle.dump(acc, open("accuracy.pickle", "wb"))
+pickle.dump(loss, open("loss.pickle", "wb"))
+pickle.dump(val_acc, open("val_accuracy.pickle", "wb"))
+pickle.dump(val_loss, open("val_loss.pickle", "wb"))
+
 print("Training took ", time.time()-start, " seconds")
 
 # To save:
