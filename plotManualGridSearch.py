@@ -1,98 +1,71 @@
+#from matplotlib.colors import LogNorm
 import os
-import keras
 import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 import localConfig as cfg
-from keras.models import model_from_json, Sequential
-from sklearn.metrics import confusion_matrix, cohen_kappa_score, roc_curve, roc_auc_score
-from prepareDATA import *
-from commonFunctions import FOM1, FOM2, FullFOM, getYields
-#StopDataLoader
+#from prepareDATA import test_point
 
-runNum = 3
-model_name = "L2_N25_550_520_run3"
-
+runNum = 4
+test_point = "550_520"
 filepath = cfg.lgbk+"Searches/run"+str(runNum)
 os.chdir(filepath)
 
-print "Loading Model ..."
-with open(model_name+'.json', 'r') as json_file:
-  loaded_model_json = json_file.read()
-model = model_from_json(loaded_model_json)
-model.load_weights(model_name+".h5")
-model.compile(loss = 'binary_crossentropy', optimizer = 'adam')
+#f = open(filepath+name+'.txt', 'r')
+name = "mGS:outputs_run"+str(runNum)+"_"+test_point
+f = open(name + '.txt', 'r')
 
-print("Getting predictions")
-devPredict = model.predict(XDev)
-valPredict = model.predict(XVal)
+layer = []
+neurons = []
+roc_AUC = []
+ks = []
+ks_s = []
+ks_b = []
+FOM = []
+line_index=0
 
-print "Calculating parameters"
-dataDev["NN"] = devPredict
-dataVal["NN"] = valPredict
+# ===> AQUI CRIA-SE LISTAS DOS VALORES. CONVEM AJUSTAR PAAR QUAIS SE GUARDARAM ETC. NESTE CASO ESTAO 7 A SER GUARDADOS.
+for line in f:
+    if line_index%7==0:
+        layer.append(float(line,))
+    if line_index%7==1:
+        neurons.append(float(line,))
+    if line_index%7==2:
+        roc_AUC.append(float(line,))
+    if line_index%7==3:
+        ks_s.append(float(line,))
+    if line_index%7==4:
+        ks_b.append(float(line,))
+    if line_index%7==5:
+        ks.append(float(line,))
+    if line_index%7==6:
+        FOM.append(float(line,))
+    line_index=line_index+1
 
-sig_dataDev=dataDev[dataDev.category==1]
-bkg_dataDev=dataDev[dataDev.category==0]
-sig_dataVal=dataVal[dataVal.category==1]
-bkg_dataVal=dataVal[dataVal.category==0]
-
-fomEvo = []
-fomCut = []
-
-bkgEff = []
-sigEff = []
-
-sig_Init = dataVal[dataVal.category == 1].weight.sum() * 35866 * 2
-bkg_Init = dataVal[dataVal.category == 0].weight.sum() * 35866 * 2
-
-for cut in np.arange(0.0, 0.9999, 0.001):
-    sig, bkg = getYields(dataVal, cut=cut, luminosity=luminosity)
-    if sig[0] > 0 and bkg[0] > 0:
-        fom, fomUnc = FullFOM(sig, bkg)
-        fomEvo.append(fom)
-        fomCut.append(cut)
-        bkgEff.append(bkg[0]/bkg_Init)
-        sigEff.append(sig[0]/sig_Init)
-
-
-print "Plotting"
-plt.figure(figsize=(7,6))
-plt.hist(sig_dataDev["NN"], 50, facecolor='blue', alpha=0.7, normed=1, weights=sig_dataDev["weight"])
-plt.hist(bkg_dataDev["NN"], 50, facecolor='red', alpha=0.7, normed=1, weights=bkg_dataDev["weight"])
-plt.hist(sig_dataVal["NN"], 50, color='blue', alpha=1, normed=1, weights=sig_dataVal["weight"], histtype="step")
-plt.hist(bkg_dataVal["NN"], 50, color='red', alpha=1, normed=1, weights=bkg_dataVal["weight"], histtype="step")
-plt.xlabel('NN output')
-plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweight='bold')
-#plt.title("Roc Curve AUC: {0} \nKolmogorov Smirnov test (s,b,s+b): ({1}, {2}, {3})".format(roc_Integral, km_value_s, km_value_b, km_value), fontsize=10)
-plt.legend(['Signal (Test sample)', 'Background (Test sample)', 'Signal (Train sample)', 'Background (Train sample)'], loc='upper right')
-plt.savefig('hist_'+model_name+'.png', bbox_inches='tight')
+layers_legend = ["1 layer","2 layers", "3 layers"]
+nLayers = len(layers_legend)
 
 plt.figure(figsize=(7,6))
-plt.plot(bkgEff, sigEff)
-plt.title("Roc curve", fontweight='bold')
-plt.ylabel("Signal efficiency")
-plt.xlabel("Bakcground efficiency")
-plt.axis([0, 1, 0, 1])
-#plt.legend(["Roc curve integral: {0}".format(roc_Integral)], loc='best')
-plt.savefig('Roc_'+model_name+'.png', bbox_inches='tight')
+plt.xlabel("Number of Neurons")
+plt.ylabel('Roc AUC')
+plt.suptitle("Roc curve integral for several configurations of Neural Nets", fontsize=13, fontweight='bold')
+# ===> TEM QUE SE AJUSTAR BEM O INICIO E FIM DAS LISTAS PARA CRIAR UMA LINAH POR LAYER/OUTRO PARAMETRO
+lim = len(neurons)/nLayers
 
-print 
+for i in range(0,nLayers):
+    plt.plot(neurons[i*lim:(i+1)*lim], roc_AUC[i*lim:(i+1)*lim])
+
 
 '''
-plt.figure(figsize=(7,6))
-plt.subplots_adjust(hspace=0.5)
-plt.subplot(211)
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
-plt.title('model accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
-plt.subplot(212)
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('model loss')
-plt.ylabel('loss')
-plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
-plt.savefig("evo_"+name+'.png')
-#plt.show()
+plt.plot(neurons[0:100], roc_AUC[0:100])
+plt.plot(neurons[100:200], roc_AUC[100:200])
+plt.plot(neurons[200:300], roc_AUC[200:300])
+plt.plot(neurons[300:400], roc_AUC[300:400])
+plt.plot(neurons[400:500], roc_AUC[400:500])
+plt.plot(neurons[500:600], roc_AUC[500:600])
+#plt.axvline(x=25, ymin=0, ymax = 1, linewidth=2, color='black')
+#plt.axvline(x=80, ymin=0, ymax = 1, linewidth=2, color='black')
+'''
+plt.legend(layers_legend, loc='best')
+#plt.savefig("roc25_80_"+name+".png")
+plt.show()

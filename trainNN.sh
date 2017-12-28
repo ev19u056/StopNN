@@ -13,7 +13,7 @@
 #...$ -v SGEOUT=accuracy.pickle
 #...$ -v SGEOUT=loss.pickle
 
-#...$ -l gpu
+#$ -l gpu
 
 cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/
 

@@ -30,7 +30,7 @@ runNum = 3
 #filepath = cfg.lgbk+"Searches/run"+str(runNum)
 
 # Plot Single NN
-model_name = "L2_N25_E300_Bs30000_Lr0.0003_Dr0.0_TP550_520"
+model_name = "L2_N20_E3000_Bs1249_Lr0.03_Dr0.1_TP550_520"
 filepath = cfg.lgbk+"SingleNN/"+model_name
 os.chdir(filepath)
 

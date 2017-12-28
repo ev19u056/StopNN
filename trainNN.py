@@ -18,11 +18,11 @@ import localConfig as cfg
 from prepareDATA import *
 
 
-n_neurons = 25
+n_neurons = 20
 n_layers = 2
-n_epochs = 300
-batch_size = 30000 #len(XDev)/10
-learning_rate = 0.0003
+n_epochs = 3000
+batch_size = len(XDev)/100
+learning_rate = 0.03
 dropout_rate = 0.0
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
