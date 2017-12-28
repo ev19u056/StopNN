@@ -71,7 +71,6 @@ for y in [1,2,3]:   # LAYERS
         pickle.dump(acc, open("accuracy.pickle", "wb"))
         pickle.dump(loss, open("loss.pickle", "wb"))
 
-
         name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
         model.save(name+".h5")
         model_json = model.to_json()
