@@ -14,7 +14,7 @@ from sklearn.externals import joblib
 from sklearn.preprocessing import StandardScaler
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
-from keras.optimizers import Adam
+from keras.optimizers import Adam, Nadam
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from scipy.stats import ks_2samp
 #import matplotlib.pyplot as plt
@@ -27,8 +27,8 @@ from math import log
 from prepareDATA import *
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-trainParams = {'epochs': 300, 'batch_size': 30000, 'verbose': 0}
-learning_rate = 0.003
+trainParams = {'epochs': 500, 'batch_size': 3000, 'verbose': 0}
+learning_rate = 0.005
 myAdam = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myAdam
 
@@ -64,14 +64,15 @@ for y in [1,2,3]:   # LAYERS
         print("Starting the training")
         model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
         history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
-        acc = history.history["acc"]
+        
+	name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
+	
+	acc = history.history["acc"]
         #val_acc = history.history['val_acc']
         loss = history.history['loss']
         #val_loss = history.history['val_loss']
-        pickle.dump(acc, open("accuracy.pickle", "wb"))
-        pickle.dump(loss, open("loss.pickle", "wb"))
-
-        name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
+        pickle.dump(acc, open("accuracy"+name+".pickle", "wb"))
+        pickle.dump(loss, open("loss"+name+".pickle", "wb"))
         model.save(name+".h5")
         model_json = model.to_json()
         with open(name + ".json", "w") as json_file:

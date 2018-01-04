@@ -10,10 +10,10 @@
 #...$ -v SGEIN=script.py
 #...$ -v SGEIN=pima-indians-diabetes.data
 
-#$ -v SGEOUT=accuracy.pickle
-#$ -v SGEOUT=loss.pickle
+#...$ -v SGEOUT=accuracy.pickle
+#...$ -v SGEOUT=loss.pickle
 
-#...$ -l gpu
+#$ -l gpu
 
 cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/
 

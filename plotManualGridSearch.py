@@ -67,5 +67,5 @@ plt.plot(neurons[500:600], roc_AUC[500:600])
 #plt.axvline(x=80, ymin=0, ymax = 1, linewidth=2, color='black')
 '''
 plt.legend(layers_legend, loc='best')
-#plt.savefig("roc25_80_"+name+".png")
+plt.savefig("roc25_80_"+name+".png")
 plt.show()

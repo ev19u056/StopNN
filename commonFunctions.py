@@ -7,7 +7,7 @@ import pandas
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
-from keras.optimizers import Adam
+from keras.optimizers import Adam, Nadam 
 from math import log
 
 # Signal Dataset
@@ -246,7 +246,7 @@ def gridClassifier(nIn, nOut, compileArgs, layers=1, neurons=1, learn_rate=0.001
         model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
         model.add(Dropout(dropout_rate))
     model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
-    optimizer = Adam(lr=learn_rate)
+    optimizer = Nadam(lr=learn_rate)
     compileArgs['optimizer'] = optimizer
     model.compile(**compileArgs)
     print("\nTraining with %i layers and %i neurons\n" % (layers, neurons))

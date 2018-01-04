@@ -39,14 +39,14 @@ model = KerasClassifier(build_fn=gridClassifier,nIn=len(trainFeatures),nOut=1, c
 n_iter_search = 5000
 
 #neurons = arange([],1,20)
-neurons = randint(5, 50)
+neurons = randint(5, 100)
 #layers = arange([],1,3)
-layers = randint(1,5)
+layers = randint(1,1000)
 #epochs = [15]
 epochs = [100]
 batch_size = [l/5, l/10, l/50, l/100, l,500, l/1000] # randint(l/1000,l/10)
 learn_rate = [1/10., 3/10., 1/100., 3/100., 1/1000., 3/1000.] # randint(1/10.,1/1000.)
-dropout_rate = [0,0.5]
+dropout_rate = [0]
 
 begin = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
 
