@@ -53,7 +53,7 @@ f = open(name+'.txt', 'w')
 
 def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
     model = Sequential()
-    model.add(Dense(neu_ input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+    model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
     for x in range(0, lay_ers-1):
         model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
     model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
