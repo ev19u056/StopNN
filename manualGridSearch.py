@@ -48,7 +48,7 @@ os.mkdir(filepath+"/accuracy")
 os.mkdir(filepath+"/loss")
 os.chdir(filepath)
 
-name = "mGS:outputs_run"+str(runNum)+"_"+test_point
+name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
 f = open(name+'.txt', 'w')
 
 def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):

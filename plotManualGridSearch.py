@@ -12,7 +12,12 @@ filepath = cfg.lgbk+"Searches/run"+str(runNum)
 os.chdir(filepath)
 
 #f = open(filepath+name+'.txt', 'r')
-name = "mGS:outputs_run"+str(runNum)+"_"+test_point
+# Until run5
+#name = "mGS:outputs_run"+str(runNum)+"_"+test_point
+learning_rate = 0.001
+my_decay = 0
+name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
+
 f = open(name + '.txt', 'r')
 
 layer = []
