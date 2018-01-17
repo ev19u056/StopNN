@@ -27,9 +27,10 @@ from math import log
 from prepareDATA import *
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-trainParams = {'epochs': 500, 'batch_size': 3000, 'verbose': 0}
+trainParams = {'epochs': 300, 'batch_size': 3000, 'verbose': 0}
 learning_rate = 0.005
-myAdam = Adam(lr=learning_rate)
+my_decay = 0
+myAdam = Adam(lr=learning_rate, decay=my_decay)
 compileArgs['optimizer'] = myAdam
 
 print "Opening file"
@@ -43,6 +44,8 @@ while os.path.exists(filepath+"run"+str(runNum)):
 filepath = filepath+"run"+str(runNum)
 
 os.mkdir(filepath)
+os.mkdir(filepath+"/accuracy")
+os.mkdir(filepath+"/loss")
 os.chdir(filepath)
 
 name = "mGS:outputs_run"+str(runNum)+"_"+test_point
@@ -50,29 +53,29 @@ f = open(name+'.txt', 'w')
 
 def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
     model = Sequential()
-    model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-    for x in range(0, layers-1):
+    model.add(Dense(neu_ input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+    for x in range(0, lay_ers-1):
         model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
     model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
     model.compile(**compileArgs)
     return model
 
 for y in [1,2,3]:   # LAYERS
-    for x in range(1, 101):    # NEURONS
+    for x in range(2, 101):    # NEURONS
         print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
 
         print("Starting the training")
         model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
         history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
-        
+
 	name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
-	
+
 	acc = history.history["acc"]
         #val_acc = history.history['val_acc']
         loss = history.history['loss']
         #val_loss = history.history['val_loss']
-        pickle.dump(acc, open("accuracy"+name+".pickle", "wb"))
-        pickle.dump(loss, open("loss"+name+".pickle", "wb"))
+        pickle.dump(acc, open("accuracy/acc_"+name+".pickle", "wb"))
+        pickle.dump(loss, open("loss/loss_"+name+".pickle", "wb"))
         model.save(name+".h5")
         model_json = model.to_json()
         with open(name + ".json", "w") as json_file:
