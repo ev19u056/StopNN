@@ -19,19 +19,20 @@ import pickle
 from prepareDATA import *
 
 
-n_neurons = 20
+n_neurons = 25
 n_layers = 2
 n_epochs = 300
-batch_size = len(XDev)/100
-learning_rate = 0.03
+batch_size = 30000 #len(XDev)/100
+learning_rate = 0.003
 dropout_rate = 0.0
+dataset_used = "full" #or "skimmed"
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
 trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 0}
-myOpt = Nadam(lr=learning_rate)
+myOpt = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myOpt
 
-name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_O"+"Nadam"+"_TP"+test_point
+name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_TP"+test_point+"_"+dataset_used
 
 filepath = cfg.lgbk+"SingleNN/"+name
 
