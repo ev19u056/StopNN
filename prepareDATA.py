@@ -19,7 +19,7 @@ inputBranches = list(myFeatures)
 inputBranches.append("XS")
 inputBranches.append("weight")
 preselection = "(DPhiJet1Jet2 < 2.5 || Jet2Pt < 60) && (Met > 280) && (HT > 200) && (isTight == 1) && (Jet1Pt > 110)"
-suffix = "_skimmed"
+suffix = ""# "_skimmed"
 luminosity = 35866
 number_of_events_print = 0
 test_point = "550_520"
