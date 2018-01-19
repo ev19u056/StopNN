@@ -29,7 +29,7 @@ from prepareDATA import *
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
 trainParams = {'epochs': 300, 'batch_size': 3000, 'verbose': 0}
 learning_rate = 0.001
-my_decay = 0
+my_decay = 0.1
 myAdam = Adam(lr=learning_rate, decay=my_decay)
 compileArgs['optimizer'] = myAdam
 

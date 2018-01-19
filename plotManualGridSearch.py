@@ -6,7 +6,9 @@ from mpl_toolkits.mplot3d import Axes3D
 import localConfig as cfg
 #from prepareDATA import test_point
 
-runNum = 4
+runNum = 11
+learning_rate = 5
+my_decay = 0
 test_point = "550_520"
 filepath = cfg.lgbk+"Searches/run"+str(runNum)
 os.chdir(filepath)
@@ -14,8 +16,6 @@ os.chdir(filepath)
 #f = open(filepath+name+'.txt', 'r')
 # Until run5
 #name = "mGS:outputs_run"+str(runNum)+"_"+test_point
-learning_rate = 0.001
-my_decay = 0
 name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
 
 f = open(name + '.txt', 'r')
@@ -54,6 +54,7 @@ plt.figure(figsize=(7,6))
 plt.xlabel("Number of Neurons")
 plt.ylabel('Roc AUC')
 plt.suptitle("Roc curve integral for several configurations of Neural Nets", fontsize=13, fontweight='bold')
+plt.title("Learning rate: {0}\nDecay: {1}".format(learning_rate, my_decay), fontsize=10)
 # ===> TEM QUE SE AJUSTAR BEM O INICIO E FIM DAS LISTAS PARA CRIAR UMA LINAH POR LAYER/OUTRO PARAMETRO
 lim = len(neurons)/nLayers
 
@@ -72,5 +73,5 @@ plt.plot(neurons[500:600], roc_AUC[500:600])
 #plt.axvline(x=80, ymin=0, ymax = 1, linewidth=2, color='black')
 '''
 plt.legend(layers_legend, loc='best')
-plt.savefig("roc25_80_"+name+".png")
+plt.savefig("ROC_run"+str(runNum)+"_"+str(test_point)+"_"+str(learning_rate)+"_"+str(my_decay)+".png")
 plt.show()
