@@ -25,10 +25,10 @@ n_epochs = 300
 batch_size = 30000 #len(XDev)/100
 learning_rate = 0.003
 dropout_rate = 0.0
-dataset_used = "full" #or "skimmed"
+dataset_used = "full+pre" #or "skimmed"
 
 compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 0}
+trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
 myOpt = Adam(lr=learning_rate)
 compileArgs['optimizer'] = myOpt
 
@@ -52,12 +52,12 @@ acc = history.history["acc"]
 val_acc = history.history['val_acc']
 loss = history.history['loss']
 val_loss = history.history['val_loss']
-'''
+
 pickle.dump(acc, open("accuracy.pickle", "wb"))
 pickle.dump(loss, open("loss.pickle", "wb"))
 pickle.dump(val_acc, open("val_accuracy.pickle", "wb"))
 pickle.dump(val_loss, open("val_loss.pickle", "wb"))
-'''
+
 print("Training took ", time.time()-start, " seconds")
 
 # To save:
