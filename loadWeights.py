@@ -5,8 +5,8 @@ from keras.models import model_from_json
 
 runNum = 20
 model_name = "L1_N5_550_520_run20"
-filepath = cfg.lgbk + "Searches/"+str(runNum)
-os.chdir(model_path)
+filepath = cfg.lgbk + "Searches/run"+str(runNum)
+os.chdir(filepath)
 
 print "Loading Model ..."
 with open(model_name+'.json', 'r') as json_file:

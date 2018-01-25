@@ -30,7 +30,7 @@ runNum = 3
 #filepath = cfg.lgbk+"Searches/run"+str(runNum)
 
 # Plot Single NN
-model_name = "L2_N25_E300_Bs30000_Lr0.003_Dr0.0_TP550_520" 
+model_name = "L2_N25_E300_Bs30000_Lr0.003_Dr0.0_TP550_520_full+pre" 
 filepath = cfg.lgbk+"SingleNN/"+model_name
 os.chdir(filepath)
 
@@ -135,6 +135,7 @@ print "ROC Curve Integral:", roc_integral
 print "Plotting"
 
 plt.figure(figsize=(7,6))
+plt.yscale('log')
 plt.hist(sig_dataDev["NN"], 50, facecolor='blue', alpha=0.7, normed=1, weights=sig_dataDev["weight"])
 plt.hist(bkg_dataDev["NN"], 50, facecolor='red', alpha=0.7, normed=1, weights=bkg_dataDev["weight"])
 plt.hist(sig_dataVal["NN"], 50, color='blue', alpha=1, normed=1, weights=sig_dataVal["weight"], histtype="step")
