@@ -31,7 +31,7 @@ if __name__ == "__main__":
     if args.singleNN:
         filepath = cfg.lgbk + "SingleNN/" + model_name
     elif args.runNum != None:
-        filepath = cfg.lgbk + "Searches/run" + str(args.runNum)+ "/" + model_name
+        filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
     elif args.local:
         filepath = "/home/diogo/PhD/SingleNN/" + model_name
 
