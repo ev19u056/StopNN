@@ -76,6 +76,8 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
     raise ValueError("An invalid fraction was chosen")
   if "XS" not in features:
     features.append("XS")
+  if "Event" not in features:
+    features.append("Event")
   if "weight" not in features:
     features.append("weight")
 
