@@ -37,7 +37,6 @@ if __name__ == "__main__":
 
     os.chdir(filepath)
 
-    print "Loading Model ..."
     with open(model_name+'.json', 'r') as json_file:
       loaded_model_json = json_file.read()
     model = model_from_json(loaded_model_json)
@@ -92,15 +91,8 @@ if __name__ == "__main__":
         nCol = 4
 
     for layer in model.layers:
-        print "\n"
-        print layer.name
-        print layer.get_weights()
-        #print "\nNew LAYER\n"
-        #print layer.get_weights()
-        #print "\n!"
         if len(layer.get_weights()) == 0:
             continue
-        print layer.get_weights()[0]
         ax = figure.add_subplot(nRow, nCol,i)
 
         im = plt.imshow(layer.get_weights()[0], interpolation="none", vmin=-2, vmax=2, cmap=myColor)
@@ -110,6 +102,7 @@ if __name__ == "__main__":
         plt.colorbar(im, use_gridspec=True)
 
         i+=1
+
     plt.tight_layout()
     plt.savefig('Weights_'+model_name+'.pdf', bbox_inches='tight')
     plt.show()
