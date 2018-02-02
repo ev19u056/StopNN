@@ -84,8 +84,8 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
-  testPath = "nTuples_v2017-10-19_test/"
-  trainPath = "nTuples_v2017-10-19_train/"
+  testPath = "nTuples_v2017-10-19_test_skimmed/"
+  trainPath = "nTuples_v2017-10-19_train_skimmed/"
 
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
