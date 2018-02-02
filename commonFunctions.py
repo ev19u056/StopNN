@@ -76,6 +76,8 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
     raise ValueError("An invalid fraction was chosen")
   if "XS" not in features:
     features.append("XS")
+  if "Event" not in features:
+    features.append("Event")
   if "weight" not in features:
     features.append("weight")
 
@@ -84,8 +86,10 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
-  testPath = "nTuples_v2017-10-19_test/"
-  trainPath = "nTuples_v2017-10-19_train/"
+  #testPath = "nTuples_v2017-10-19_test/"
+  #trainPath = "nTuples_v2017-10-19_train/"
+  testPath ="test/"
+  trainPath = "train/"
 
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
