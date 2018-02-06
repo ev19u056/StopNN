@@ -11,7 +11,6 @@ import pandas
 #from keras.models import Sequential
 #from keras.layers import Dense, Dropout, AlphaDropout
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
-import matplotlib.pyplot as plt
 from commonFunctions import getYields, FullFOM, myClassifier, gridClassifier
 #from scipy.stats import ks_2samp
 import localConfig as cfg
@@ -143,6 +142,7 @@ if __name__ == "__main__":
 
     if not args.batch:
         import sys
+        import matplotlib.pyplot as plt
 
         plt.figure(figsize=(7,6))
         plt.subplots_adjust(hspace=0.5)
