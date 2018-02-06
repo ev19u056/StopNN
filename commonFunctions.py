@@ -9,6 +9,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam, Nadam
 from math import log
+from prepareDATA import suffix
+
 
 # Signal Dataset
 
@@ -86,8 +88,8 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
-  testPath = "nTuples_v2017-10-19_test_skimmed/"
-  trainPath = "nTuples_v2017-10-19_train_skimmed/"
+  testPath = "nTuples_v2017-10-19_test"+suffix+"/"
+  trainPath = "nTuples_v2017-10-19_train"+suffix+"/"
 
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
