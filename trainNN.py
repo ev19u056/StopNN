@@ -25,23 +25,23 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process the command line options')
 #   parser.add_argument('-c', '--configFile', required=True, help='Configuration file describing the neural network topology and options as well as the samples to process')
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
-    parser.add_argument('-lr', '--learningRate', type=float, required=True, help='Learning rate')
-    parser.add_argument('-dr', '--dropoutRate', type=float, required=True, help='Drop-out rate')
-    parser.add_argument('-d', '--decay', type=float, required=True, help='Learning rate decay')
     parser.add_argument('-l', '--layers', type=int, required=True, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, required=True, help='Number of neurons per layer')
     parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
     parser.add_argument('-bs', '--batchSize', type=int, required=True, help='Batch size')
+    parser.add_argument('-r', '--learningRate', type=float, required=True, help='Learning rate')
+    parser.add_argument('-dc', '--decay', type=float, required=True, help='Learning rate decay')
+    parser.add_argument('-dp', '--dropoutRate', type=float, required=True, help='Drop-out rate')
 
     args = parser.parse_args()
 
-    n_neurons = args.neurons
     n_layers = args.layers
+    n_neurons = args.neurons
     n_epochs = args.epochs
     batch_size = args.batchSize #len(XDev)/100
     learning_rate = args.learningRate
-    dropout_rate = args.dropoutRate
     my_decay = args.decay
+    dropout_rate = args.dropoutRate
     dataset_used = "full+pre" #or "skimmed"
 
     compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}

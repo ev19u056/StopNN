@@ -33,7 +33,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process the command line options')
 #   parser.add_argument('-c', '--configFile', required=True, help='Configuration file describing the neural network topology and options as well as the samples to process')
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
-    parser.add_argument('-lr', '--learningRate', type=float, required=True, help='Learning rate')
+    parser.add_argument('-r', '--learningRate', type=float, required=True, help='Learning rate')
     parser.add_argument('-d', '--decay', type=float, required=True, help='Learning rate decay')
     parser.add_argument('-l', '--layers', type=int, required=False, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, required=False, help='Number of neurons per layer')
