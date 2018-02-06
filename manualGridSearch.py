@@ -33,14 +33,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process the command line options')
 #   parser.add_argument('-c', '--configFile', required=True, help='Configuration file describing the neural network topology and options as well as the samples to process')
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
-    parser.add_argument('-l', '--learningRate', type=float, required=True, help='Learning rate')
+    parser.add_argument('-lr', '--learningRate', type=float, required=True, help='Learning rate')
     parser.add_argument('-d', '--decay', type=float, required=True, help='Learning rate decay')
+    parser.add_argument('-l', '--layers', type=int, required=True, help='Number of layers')
+    parser.add_argument('-n', '--neurons', type=int, required=True, help='Number of neurons per layer')
+    parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
+    parser.add_argument('-bs', '--batchSize', type=int, required=True, help='Batch size')
+
 
 
     args = parser.parse_args()
 
     compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-    trainParams = {'epochs': 300, 'batch_size': 30000, 'verbose': 0}
+    trainParams = {'epochs': args.epochs, 'batch_size': args.batchSize, 'verbose': 0}
     learning_rate = args.learningRate
     my_decay = args.decay
     myAdam = Adam(lr=learning_rate, decay=my_decay)
