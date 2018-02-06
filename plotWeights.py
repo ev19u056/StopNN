@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
 #   parser.add_argument('-o', '--outDirectory', required=True, help='Name of the output directory')
     parser.add_argument('-b', '--batch', action='store_true', help='Whether this is a batch job, if it is, no interactive questions will be asked and answers will be assumed')
-    parser.add_argument('-f', '--file', action='store_true', help='File name')
+    parser.add_argument('-f', '--file', help='File name')
     parser.add_argument('-l', '--layers', type=int, required=False, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, required=False, help='Number of neurons per layer')
     parser.add_argument('-ll', '--local', action='store_true', help='Run locally')
@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.file:
+    if args.file != None:
         model_name = args.file
     else:
         model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_550_520_run"+str(args.runNum)
