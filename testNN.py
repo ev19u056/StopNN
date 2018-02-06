@@ -24,11 +24,14 @@ import sys
 from keras.models import model_from_json
 from prepareDATA import *
 
-#model_name = "myNN_N15_L3_E300_B24902_Lr0.002_Dr0.0_Dev550_520_Val550_520"
+runNum = 3
+# Plot Grid Search Output Model
+#model_name = "L1_N30_550_520_run3"
+#filepath = cfg.lgbk+"Searches/run"+str(runNum)
 
-model_name = "newDATA_N25_L2_E300_B30000_Lr0.003_Dr0.0_Dev550_520_Val550_520"
-
-filepath = cfg.lgbk+model_name
+# Plot Single NN
+model_name = "L2_N25_E300_Bs30000_Lr0.003_Dr0.0_TP550_520_full+pre" 
+filepath = cfg.lgbk+"SingleNN/"+model_name
 os.chdir(filepath)
 
 print "Loading Model ..."
@@ -45,8 +48,8 @@ valPredict = model.predict(XVal)
 
 print("Getting scores")
 
-scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 1)
-scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 1)
+scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
+scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
 print ""
 cohen_kappa=cohen_kappa_score(YVal, valPredict.round())
 
@@ -132,6 +135,7 @@ print "ROC Curve Integral:", roc_integral
 print "Plotting"
 
 plt.figure(figsize=(7,6))
+plt.yscale('log')
 plt.hist(sig_dataDev["NN"], 50, facecolor='blue', alpha=0.7, normed=1, weights=sig_dataDev["weight"])
 plt.hist(bkg_dataDev["NN"], 50, facecolor='red', alpha=0.7, normed=1, weights=bkg_dataDev["weight"])
 plt.hist(sig_dataVal["NN"], 50, color='blue', alpha=1, normed=1, weights=sig_dataVal["weight"], histtype="step")

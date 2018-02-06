@@ -7,7 +7,7 @@ import pandas
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
-from keras.optimizers import Adam
+from keras.optimizers import Adam, Nadam
 from math import log
 
 # Signal Dataset
@@ -76,6 +76,8 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
     raise ValueError("An invalid fraction was chosen")
   if "XS" not in features:
     features.append("XS")
+  if "Event" not in features:
+    features.append("Event")
   if "weight" not in features:
     features.append("weight")
 
@@ -84,10 +86,12 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
+  testPath = "nTuples_v2017-10-19_test"+suffix+"/"
+  trainPath = "nTuples_v2017-10-19_train"+suffix+"/"
 
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
-                                path + "test/" + sigName_test + suffix + ".root",
+                                path + testPath + sigName_test + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -102,7 +106,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
 
   for sigName in signalMap[signal]:
     tmp = root_numpy.root2array(
-                                path + "train/" + sigName + suffix + ".root",
+                                path + trainPath + sigName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -120,7 +124,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   bkgVal = None
   for bkgName in bkgDatasets:
     tmp = root_numpy.root2array(
-                                path + "/train/" + bkgName + suffix + ".root",
+                                path + trainPath + bkgName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -133,7 +137,7 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
       bkgDev = bkgDev.append(pandas.DataFrame(tmp), ignore_index=True)
 
     tmp = root_numpy.root2array(
-                                path + "/test/" + bkgName + suffix + ".root",
+                                path + testPath + bkgName + suffix + ".root",
                                 treename=treename,
                                 selection=selection,
                                 branches=features
@@ -229,6 +233,7 @@ def getYields(dataVal, cut=0.5, luminosity=35866, splitFactor=2):
 def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate):
   model = Sequential()
   model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+  model.add(Dropout(dropout_rate))
   for i in range(0,layers-1):
       model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
       model.add(Dropout(dropout_rate))
@@ -244,7 +249,7 @@ def gridClassifier(nIn, nOut, compileArgs, layers=1, neurons=1, learn_rate=0.001
         model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
         model.add(Dropout(dropout_rate))
     model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
-    optimizer = Adam(lr=learn_rate)
+    optimizer = Nadam(lr=learn_rate)
     compileArgs['optimizer'] = optimizer
     model.compile(**compileArgs)
     print("\nTraining with %i layers and %i neurons\n" % (layers, neurons))

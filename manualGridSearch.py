@@ -14,57 +14,75 @@ from sklearn.externals import joblib
 from sklearn.preprocessing import StandardScaler
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
-from keras.optimizers import Adam
+from keras.optimizers import Adam, Nadam
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from scipy.stats import ks_2samp
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import localConfig as cfg
 from commonFunctions import StopDataLoader, FullFOM, getYields
-
+import pickle
 import sys
 from math import log
 
 from prepareDATA import *
 
-compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-trainParams = {'epochs': 300, 'batch_size': 30000, 'verbose': 1}
-learning_rate = 0.003
-myAdam = Adam(lr=learning_rate)
-compileArgs['optimizer'] = myAdam
+if __name__ == "__main__":
+    import argparse
+    import sys
 
-print "Opening file"
+    parser = argparse.ArgumentParser(description='Process the command line options')
+#   parser.add_argument('-c', '--configFile', required=True, help='Configuration file describing the neural network topology and options as well as the samples to process')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
+    parser.add_argument('-r', '--learningRate', type=float, required=True, help='Learning rate')
+    parser.add_argument('-d', '--decay', type=float, required=True, help='Learning rate decay')
+    parser.add_argument('-l', '--layers', type=int, required=False, help='Number of layers')
+    parser.add_argument('-n', '--neurons', type=int, required=False, help='Number of neurons per layer')
+    parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
+    parser.add_argument('-bs', '--batchSize', type=int, required=True, help='Batch size')
 
-runNum = 1
-filepath = cfg.lgbk+"Searches/"
+    args = parser.parse_args()
 
-while os.path.exists(filepath+"run"+str(runNum)):
-    runNum += 1
+    compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
+    trainParams = {'epochs': args.epochs, 'batch_size': args.batchSize, 'verbose': 0}
+    learning_rate = args.learningRate
+    my_decay = args.decay
+    myAdam = Adam(lr=learning_rate, decay=my_decay)
+    compileArgs['optimizer'] = myAdam
 
-filepath = filepath+"run"+str(runNum)
+    print "Opening file"
 
-os.mkdir(filepath)
-os.chdir(filepath)
+    runNum = 1
+    filepath = cfg.lgbk+"Searches/"
 
-name = "mGS:outputs_run"+str(runNum)+"_"+test_point
-f = open(name+'.txt', 'w')
+    while os.path.exists(filepath+"run"+str(runNum)):
+        runNum += 1
 
-def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
-    model = Sequential()
-    model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-    for x in range(0, layers-1):
-        model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
-    model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
-    model.compile(**compileArgs)
-    return model
+    filepath = filepath+"run"+str(runNum)
 
-for y in [1,2,3]:   # LAYERS
-    for x in range(1, 101):    # NEURONS
-        print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
+    os.mkdir(filepath)
+    os.mkdir(filepath+"/accuracy")
+    os.mkdir(filepath+"/loss")
+    os.chdir(filepath)
 
-        print("Starting the training")
-        model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
-        history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
-        name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
+    name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
+    f = open(name+'.txt', 'w')
+
+    for y in [1,2,3]:   # LAYERS
+        for x in range(2, 101):    # NEURONS
+            print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
+
+            print("Starting the training")
+            model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
+            history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
+
+    	name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
+
+    	acc = history.history["acc"]
+        #val_acc = history.history['val_acc']
+        loss = history.history['loss']
+        #val_loss = history.history['val_loss']
+        pickle.dump(acc, open("accuracy/acc_"+name+".pickle", "wb"))
+        pickle.dump(loss, open("loss/loss_"+name+".pickle", "wb"))
         model.save(name+".h5")
         model_json = model.to_json()
         with open(name + ".json", "w") as json_file:
@@ -77,8 +95,8 @@ for y in [1,2,3]:   # LAYERS
 
         print("Getting scores")
 
-        scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 1)
-        scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 1)
+        scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
+        scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
         cohen_kappa=cohen_kappa_score(YVal, valPredict.round())
 
         print "Calculating FOM:"
@@ -138,49 +156,13 @@ for y in [1,2,3]:   # LAYERS
         f.write(str(km_value)+"\n")
         f.write(str(max_FOM)+"\n")
 
-        print "Plotting"
+    sys.exit("Done!")
 
-        plt.figure(figsize=(7,6))
-        plt.hist(sig_dataDev["NN"], 50, facecolor='blue', alpha=0.7, normed=1, weights=sig_dataDev["weight"])
-        plt.hist(bkg_dataDev["NN"], 50, facecolor='red', alpha=0.7, normed=1, weights=bkg_dataDev["weight"])
-        plt.hist(sig_dataVal["NN"], 50, color='blue', alpha=1, normed=1, weights=sig_dataVal["weight"], histtype="step")
-        plt.hist(bkg_dataVal["NN"], 50, color='red', alpha=1, normed=1, weights=bkg_dataVal["weight"], histtype="step")
-        plt.xlabel('NN output')
-        plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweight='bold')
-        plt.title("Roc Curve AUC: {0} \nKolmogorov Smirnov test (s,b,s+b): ({1}, {2}, {3})".format(roc_Integral, km_value_s, km_value_b, km_value), fontsize=10)
-        plt.legend(['Signal (Test sample)', 'Background (Test sample)', 'Signal (Train sample)', 'Background (Train sample)'], loc='upper right')
-        plt.savefig('hist_'+name+'.png', bbox_inches='tight')
-
-
-        plt.figure(figsize=(7,6))
-        plt.plot(bkgEff, sigEff)
-        plt.title("Roc curve", fontweight='bold')
-        plt.ylabel("Signal efficiency")
-        plt.xlabel("Bakcground efficiency")
-        plt.axis([0, 1, 0, 1])
-        plt.legend(["Roc curve integral: {0}".format(roc_Integral)], loc='best')
-        plt.savefig('Roc_'+name+'.png', bbox_inches='tight')
-
-
-        plt.figure(figsize=(7,6))
-        plt.subplots_adjust(hspace=0.5)
-        plt.subplot(211)
-        plt.plot(history.history['acc'])
-        plt.plot(history.history['val_acc'])
-        plt.title('model accuracy')
-        plt.ylabel('accuracy')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-
-        plt.subplot(212)
-        plt.plot(history.history['loss'])
-        plt.plot(history.history['val_loss'])
-        plt.title('model loss')
-        plt.ylabel('loss')
-        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig("evo_"+name+'.png')
-        #plt.show()
-
-sys.exit("Done!")
+def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
+model = Sequential()
+model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+    for x in range(0, layers-1):
+        model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
+model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
+model.compile(**compileArgs)
+return model

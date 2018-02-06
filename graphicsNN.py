@@ -6,7 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import localConfig as cfg
 #from prepareDATA import test_point
 
-runNum = 2 
+runNum = 1
 test_point = "550_520"
 filepath = cfg.lgbk+"Searches/run"+str(runNum)
 os.chdir(filepath)
@@ -49,6 +49,7 @@ plt.figure(figsize=(7,6))
 plt.xlabel("Number of Neurons")
 plt.ylabel('Roc AUC')
 plt.suptitle("Roc curve integral for several configurations of Neural Nets", fontsize=13, fontweight='bold')
+plt.title("Learning rate: {0}\nDecay: {1}".format(learning_rate, my_decay), fontsize=10)
 # ===> TEM QUE SE AJUSTAR BEM O INICIO E FIM DAS LISTAS PARA CRIAR UMA LINAH POR LAYER/OUTRO PARAMETRO
 lim = len(neurons)/nLayers
 
