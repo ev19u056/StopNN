@@ -4,7 +4,7 @@ Train the Neural Network
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
-from keras.optimizers import Adam, Nadam 
+from keras.optimizers import Adam, Nadam
 import time
 import keras
 import pandas
@@ -18,132 +18,149 @@ import localConfig as cfg
 import pickle
 from prepareDATA import *
 
+if __name__ == "__main__":
+    import argparse
+    import sys
 
-n_neurons = 25
-n_layers = 2
-n_epochs = 300
-batch_size = 30000 #len(XDev)/100
-learning_rate = 0.003
-dropout_rate = 0.0
-dataset_used = "full+pre" #or "skimmed"
+    parser = argparse.ArgumentParser(description='Process the command line options')
+#   parser.add_argument('-c', '--configFile', required=True, help='Configuration file describing the neural network topology and options as well as the samples to process')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
+    parser.add_argument('-lr', '--learningRate', type=float, required=True, help='Learning rate')
+    parser.add_argument('-dr', '--dropoutRate', type=float, required=True, help='Drop-out rate')
+    parser.add_argument('-d', '--decay', type=float, required=True, help='Learning rate decay')
+    parser.add_argument('-l', '--layers', type=int, required=True, help='Number of layers')
+    parser.add_argument('-n', '--neurons', type=int, required=True, help='Number of neurons per layer')
+    parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
+    parser.add_argument('-bs', '--batchSize', type=int, required=True, help='Batch size')
 
-compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
-myOpt = Adam(lr=learning_rate)
-compileArgs['optimizer'] = myOpt
+    args = parser.parse_args()
 
-name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_TP"+test_point+"_"+dataset_used
+    n_neurons = args.neurons
+    n_layers = args.layers
+    n_epochs = args.epochs
+    batch_size = args.batchSize #len(XDev)/100
+    learning_rate = args.learningRate
+    dropout_rate = args.dropoutRate
+    my_decay = args.decay
+    dataset_used = "full+pre" #or "skimmed"
 
-filepath = cfg.lgbk+"SingleNN/"+name
+    compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
+    trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
+    myOpt = Adam(lr=learning_rate, decay=my_decay)
+    compileArgs['optimizer'] = myOpt
 
-if os.path.exists(filepath) == False:
-    os.mkdir(filepath)
-os.chdir(filepath)
+    name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_TP"+test_point+"_"+dataset_used
 
-print("Dir "+filepath+" created.")
-print("Starting the training")
-start = time.time()
-#call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
-#model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate)
-#model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
-model = gridClassifier(nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,layers=n_layers,neurons=n_neurons,learn_rate=learning_rate,dropout_rate=dropout_rate)
-history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,shuffle=True, **trainParams)
-acc = history.history["acc"]
-val_acc = history.history['val_acc']
-loss = history.history['loss']
-val_loss = history.history['val_loss']
+    filepath = cfg.lgbk+"SingleNN/"+name
 
-pickle.dump(acc, open("accuracy.pickle", "wb"))
-pickle.dump(loss, open("loss.pickle", "wb"))
-pickle.dump(val_acc, open("val_accuracy.pickle", "wb"))
-pickle.dump(val_loss, open("val_loss.pickle", "wb"))
+    if os.path.exists(filepath) == False:
+        os.mkdir(filepath)
+    os.chdir(filepath)
 
-print("Training took ", time.time()-start, " seconds")
+    print("Dir "+filepath+" created.")
+    print("Starting the training")
+    start = time.time()
+    #call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
+    #model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate)
+    #model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
+    model = gridClassifier(nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,layers=n_layers,neurons=n_neurons,learn_rate=learning_rate,dropout_rate=dropout_rate)
+    history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,shuffle=True, **trainParams)
+    acc = history.history["acc"]
+    val_acc = history.history['val_acc']
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
 
-# To save:
-model.save(name+".h5")
-model_json = model.to_json()
-with open(name + ".json", "w") as json_file:
-  json_file.write(model_json)
-model.save_weights(name + ".h5")
+    pickle.dump(acc, open("accuracy.pickle", "wb"))
+    pickle.dump(loss, open("loss.pickle", "wb"))
+    pickle.dump(val_acc, open("val_accuracy.pickle", "wb"))
+    pickle.dump(val_loss, open("val_loss.pickle", "wb"))
 
-print("Getting predictions")
-devPredict = model.predict(XDev)
-valPredict = model.predict(XVal)
+    print("Training took ", time.time()-start, " seconds")
 
-print("Getting scores")
+    # To save:
+    model.save(name+".h5")
+    model_json = model.to_json()
+    with open(name + ".json", "w") as json_file:
+      json_file.write(model_json)
+    model.save_weights(name + ".h5")
 
-scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
-scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
+    print("Getting predictions")
+    devPredict = model.predict(XDev)
+    valPredict = model.predict(XVal)
 
+    print("Getting scores")
 
-print "Calculating FOM:"
-dataVal["NN"] = valPredict
-
-tmpSig, tmpBkg = getYields(dataVal)
-sigYield, sigYieldUnc = tmpSig
-bkgYield, bkgYieldUnc = tmpBkg
-
-sigDataVal = dataVal[dataVal.category==1]
-bkgDataVal = dataVal[dataVal.category==0]
-
-fomEvo = []
-fomCut = []
-
-for cut in np.arange(0.0, 0.9999999, 0.001):
-  sig, bkg = getYields(dataVal, cut=cut)
-  if sig[0] > 0 and bkg[0] > 0:
-    fom, fomUnc = FullFOM(sig, bkg)
-    fomEvo.append(fom)
-    fomCut.append(cut)
-
-max_FOM=0
-
-print "Maximizing FOM"
-for k in fomEvo:
-  if k>max_FOM:
-    max_FOM=k
-
-print "Signal@Presel:", sigDataVal.weight.sum() * 35866 * 2
-print "Background@Presel:", bkgDataVal.weight.sum() * 35866 * 2
-print "Signal:", sigYield, "+-", sigYieldUnc
-print "Background:", bkgYield, "+-", bkgYieldUnc
-
-print "Maximized FOM:", max_FOM
-print "FOM Cut:", fomCut[fomEvo.index(max_FOM)]
-
-import sys
-#sys.exit("Done!")
-
-#########################################################
+    scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
+    scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
 
 
-# Let's repeat the above, but monitor the evolution of the loss function
+    print "Calculating FOM:"
+    dataVal["NN"] = valPredict
+
+    tmpSig, tmpBkg = getYields(dataVal)
+    sigYield, sigYieldUnc = tmpSig
+    bkgYield, bkgYieldUnc = tmpBkg
+
+    sigDataVal = dataVal[dataVal.category==1]
+    bkgDataVal = dataVal[dataVal.category==0]
+
+    fomEvo = []
+    fomCut = []
+
+    for cut in np.arange(0.0, 0.9999999, 0.001):
+      sig, bkg = getYields(dataVal, cut=cut)
+      if sig[0] > 0 and bkg[0] > 0:
+        fom, fomUnc = FullFOM(sig, bkg)
+        fomEvo.append(fom)
+        fomCut.append(cut)
+
+    max_FOM=0
+
+    print "Maximizing FOM"
+    for k in fomEvo:
+      if k>max_FOM:
+        max_FOM=k
+
+    print "Signal@Presel:", sigDataVal.weight.sum() * 35866 * 2
+    print "Background@Presel:", bkgDataVal.weight.sum() * 35866 * 2
+    print "Signal:", sigYield, "+-", sigYieldUnc
+    print "Background:", bkgYield, "+-", bkgYieldUnc
+
+    print "Maximized FOM:", max_FOM
+    print "FOM Cut:", fomCut[fomEvo.index(max_FOM)]
+
+    import sys
+    #sys.exit("Done!")
+
+    #########################################################
 
 
-#history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
+    # Let's repeat the above, but monitor the evolution of the loss function
 
-plt.figure(figsize=(7,6))
-plt.subplots_adjust(hspace=0.5)
-plt.subplot(211)
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
-plt.title('model accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
 
-plt.subplot(212)
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('model loss')
-plt.ylabel('loss')
-plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
-plt.savefig(name+'.png')
-#plt.savefig('NN2_'+str(y)+''+str(x)+''+test_point+"_"+str(max_FOM)+'.png')
+    #history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
 
-print "Model name: "+name
+    plt.figure(figsize=(7,6))
+    plt.subplots_adjust(hspace=0.5)
+    plt.subplot(211)
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
 
-sys.exit("Done!")
+    plt.subplot(212)
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+    plt.xlabel('epoch')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.savefig(name+'.png')
+    #plt.savefig('NN2_'+str(y)+''+str(x)+''+test_point+"_"+str(max_FOM)+'.png')
+
+    print "Model name: "+name
+
+    sys.exit("Done!")

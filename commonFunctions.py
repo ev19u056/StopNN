@@ -9,8 +9,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam, Nadam
 from math import log
-from prepareDATA import suffix
-
 
 # Signal Dataset
 
