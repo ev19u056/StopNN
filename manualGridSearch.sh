@@ -13,10 +13,11 @@
 #...$ -v SGEOUT=accuracy.pickle
 #...$ -v SGEOUT=loss.pickle
 
-#...$ -l gpu,release=el7
+#$ -l gpu,release=el7
 
 cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/
 
 module load root-6.10.02
 
-python manualGridSearch.py
+python manualGridSearch.py -lr 0.0025 -d 0 -l 1 -n 1 -e 300 -bs 30000
+
