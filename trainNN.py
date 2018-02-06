@@ -24,6 +24,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Process the command line options')
 #   parser.add_argument('-c', '--configFile', required=True, help='Configuration file describing the neural network topology and options as well as the samples to process')
+    parser.add_argument('-bt', '--batch', action='store_true', help='Whether this is a batch job, if it is, no interactive questions will be asked and answers will be assumed')
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
     parser.add_argument('-l', '--layers', type=int, required=True, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, required=True, help='Number of neurons per layer')
@@ -44,8 +45,12 @@ if __name__ == "__main__":
     dropout_rate = args.dropoutRate
     dataset_used = "full+pre" #or "skimmed"
 
+    verbose = 0
+    if args.verbose:
+        verbose = 1
+
     compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
-    trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': 1}
+    trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': verbose}
     myOpt = Adam(lr=learning_rate, decay=my_decay)
     compileArgs['optimizer'] = myOpt
 
@@ -57,9 +62,10 @@ if __name__ == "__main__":
         os.mkdir(filepath)
     os.chdir(filepath)
 
-    print("Dir "+filepath+" created.")
-    print("Starting the training")
-    start = time.time()
+    if args.verbose:
+        print("Dir "+filepath+" created.")
+        print("Starting the training")
+        start = time.time()
     #call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
     #model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate)
     #model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
@@ -75,7 +81,8 @@ if __name__ == "__main__":
     pickle.dump(val_acc, open("val_accuracy.pickle", "wb"))
     pickle.dump(val_loss, open("val_loss.pickle", "wb"))
 
-    print("Training took ", time.time()-start, " seconds")
+    if args.verbose:
+        print("Training took ", time.time()-start, " seconds")
 
     # To save:
     model.save(name+".h5")
@@ -84,17 +91,20 @@ if __name__ == "__main__":
       json_file.write(model_json)
     model.save_weights(name + ".h5")
 
-    print("Getting predictions")
+    if args.verbose:
+        print("Getting predictions")
+
     devPredict = model.predict(XDev)
     valPredict = model.predict(XVal)
 
-    print("Getting scores")
+    if args.verbose:
+        print("Getting scores")
 
     scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
     scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
 
-
-    print "Calculating FOM:"
+    if args.verbose:
+        print "Calculating FOM:"
     dataVal["NN"] = valPredict
 
     tmpSig, tmpBkg = getYields(dataVal)
@@ -116,51 +126,45 @@ if __name__ == "__main__":
 
     max_FOM=0
 
-    print "Maximizing FOM"
+    if args.verbose:
+        print "Maximizing FOM"
+
     for k in fomEvo:
       if k>max_FOM:
         max_FOM=k
+    if args.verbose:
+        print "Signal@Presel:", sigDataVal.weight.sum() * 35866 * 2
+        print "Background@Presel:", bkgDataVal.weight.sum() * 35866 * 2
+        print "Signal:", sigYield, "+-", sigYieldUnc
+        print "Background:", bkgYield, "+-", bkgYieldUnc
 
-    print "Signal@Presel:", sigDataVal.weight.sum() * 35866 * 2
-    print "Background@Presel:", bkgDataVal.weight.sum() * 35866 * 2
-    print "Signal:", sigYield, "+-", sigYieldUnc
-    print "Background:", bkgYield, "+-", bkgYieldUnc
+        print "Maximized FOM:", max_FOM
+        print "FOM Cut:", fomCut[fomEvo.index(max_FOM)]
 
-    print "Maximized FOM:", max_FOM
-    print "FOM Cut:", fomCut[fomEvo.index(max_FOM)]
+    if not args.batch:
+        import sys
 
-    import sys
-    #sys.exit("Done!")
+        plt.figure(figsize=(7,6))
+        plt.subplots_adjust(hspace=0.5)
+        plt.subplot(211)
+        plt.plot(history.history['acc'])
+        plt.plot(history.history['val_acc'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
 
-    #########################################################
+        plt.subplot(212)
+        plt.plot(history.history['loss'])
+        plt.plot(history.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.savefig(name+'.png')
+        #plt.savefig('NN2_'+str(y)+''+str(x)+''+test_point+"_"+str(max_FOM)+'.png
 
-
-    # Let's repeat the above, but monitor the evolution of the loss function
-
-
-    #history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
-
-    plt.figure(figsize=(7,6))
-    plt.subplots_adjust(hspace=0.5)
-    plt.subplot(211)
-    plt.plot(history.history['acc'])
-    plt.plot(history.history['val_acc'])
-    plt.title('model accuracy')
-    plt.ylabel('accuracy')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'test'], loc='upper left')
-
-    plt.subplot(212)
-    plt.plot(history.history['loss'])
-    plt.plot(history.history['val_loss'])
-    plt.title('model loss')
-    plt.ylabel('loss')
-    plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-    plt.xlabel('epoch')
-    plt.legend(['train', 'test'], loc='upper left')
-    plt.savefig(name+'.png')
-    #plt.savefig('NN2_'+str(y)+''+str(x)+''+test_point+"_"+str(max_FOM)+'.png')
-
-    print "Model name: "+name
-
-    sys.exit("Done!")
+        if args.verbose:
+            print "Model name: "+name
+        sys.exit("Done!")

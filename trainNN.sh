@@ -19,4 +19,4 @@ cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/
 
 module load root-6.10.02
 
-python trainNN.py
+python trainNN.py -bt -l 1 -n 200 -e 1000 -bs 30000 -r 0.003 -dc 0 -dp 0
