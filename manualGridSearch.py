@@ -40,8 +40,6 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
     parser.add_argument('-bs', '--batchSize', type=int, required=True, help='Batch size')
 
-
-
     args = parser.parse_args()
 
     compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
@@ -68,15 +66,6 @@ if __name__ == "__main__":
 
     name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
     f = open(name+'.txt', 'w')
-
-    def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
-        model = Sequential()
-        model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-        for x in range(0, layers-1):
-            model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
-        model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
-        model.compile(**compileArgs)
-        return model
 
     for y in [1,2,3]:   # LAYERS
         for x in range(2, 101):    # NEURONS
@@ -168,3 +157,12 @@ if __name__ == "__main__":
         f.write(str(max_FOM)+"\n")
 
     sys.exit("Done!")
+
+def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
+model = Sequential()
+model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+    for x in range(0, layers-1):
+        model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
+model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
+model.compile(**compileArgs)
+return model
