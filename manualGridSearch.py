@@ -35,8 +35,8 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
     parser.add_argument('-lr', '--learningRate', type=float, required=True, help='Learning rate')
     parser.add_argument('-d', '--decay', type=float, required=True, help='Learning rate decay')
-    parser.add_argument('-l', '--layers', type=int, required=True, help='Number of layers')
-    parser.add_argument('-n', '--neurons', type=int, required=True, help='Number of neurons per layer')
+    parser.add_argument('-l', '--layers', type=int, required=False, help='Number of layers')
+    parser.add_argument('-n', '--neurons', type=int, required=False, help='Number of neurons per layer')
     parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
     parser.add_argument('-bs', '--batchSize', type=int, required=True, help='Batch size')
 
