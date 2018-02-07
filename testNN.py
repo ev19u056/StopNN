@@ -34,6 +34,7 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--file', help='File name')
     parser.add_argument('-l', '--layers', type=int, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, help='Number of neurons per layer')
+    parser.add_argument('-s', '--singleNN', action='store_true', help='Whether this NN is stored in the Searches or SingleNN folder')
     parser.add_argument('-r', '--runNum', type=int, help='Run number')
 
     args = parser.parse_args()
