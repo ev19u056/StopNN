@@ -1,7 +1,7 @@
 '''
 Functions used in different files are gathered here to avoid redundance.
 '''
-
+import os
 import root_numpy
 import pandas
 import numpy as np
@@ -86,8 +86,13 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
+  '''
   testPath = "nTuples_v2017-10-19_test"+suffix+"/"
   trainPath = "nTuples_v2017-10-19_train"+suffix+"/"
+  '''
+
+  testPath = "test/"
+  trainPath = "train/"
 
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
