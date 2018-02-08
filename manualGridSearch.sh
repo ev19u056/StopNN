@@ -19,5 +19,4 @@ cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/
 
 module load root-6.10.02
 
-python manualGridSearch.py -lr 0.0025 -d 0 -l 1 -n 1 -e 300 -bs 30000
-
+python manualGridSearch.py -lr 0.0025 -d 0 -l 1 -n 1 -e 300 -b 30000

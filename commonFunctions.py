@@ -51,9 +51,10 @@ bkgDatasets = [
                 "Wjets_800to1200",
                 "Wjets_1200to2500",
                 "Wjets_2500toInf",
-                "TTJets_DiLepton",
-                "TTJets_SingleLeptonFromTbar",
-                "TTJets_SingleLeptonFromT",
+#                "TTJets_DiLepton",
+#                "TTJets_SingleLeptonFromTbar",
+#                "TTJets_SingleLeptonFromT",
+                "TT_pow"
                 "ZJetsToNuNu_HT100to200",
                 "ZJetsToNuNu_HT200to400",
                 "ZJetsToNuNu_HT400to600",
@@ -76,6 +77,8 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
     raise ValueError("An invalid fraction was chosen")
   if "XS" not in features:
     features.append("XS")
+  if "Nevt" not in features:
+    features.append("Nevt")
   if "Event" not in features:
     features.append("Event")
   if "weight" not in features:
@@ -165,6 +168,13 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   bkgDev["sampleWeight"] = 1
   bkgVal["sampleWeight"] = 1
 
+  # Weights without SF
+  sigDev.weight = sigDev.XS/sigDev.Nevt
+  sigVal.weight = sigVal.XS/sigVal.Nevt
+  bkgDev.weight = bkgDev.XS/bkgDev.Nevt
+  bkgVal.weight = bkgVal.XS/bkgVal.Nevt
+
+
   if fraction < 1.0:
     sigDev.weight = sigDev.weight/fraction
     sigVal.weight = sigVal.weight/fraction
@@ -235,7 +245,7 @@ def getYields(dataVal, cut=0.5, luminosity=35866, splitFactor=2):
 
 # Classifiers
 
-def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate):
+def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate=0):
   model = Sequential()
   model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
   model.add(Dropout(dropout_rate))
@@ -249,12 +259,12 @@ def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate):
 def gridClassifier(nIn, nOut, compileArgs, layers=1, neurons=1, learn_rate=0.001, dropout_rate=0.0):
     model = Sequential()
     model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-    #model.add(Dropout(dropout_rate))
-    for i in range(0,layers):
+    model.add(Dropout(dropout_rate))
+    for i in range(0,layers-1):
         model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
         model.add(Dropout(dropout_rate))
     model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
-    optimizer = Nadam(lr=learn_rate)
+    optimizer = Adam(lr=learn_rate)
     compileArgs['optimizer'] = optimizer
     model.compile(**compileArgs)
     print("\nTraining with %i layers and %i neurons\n" % (layers, neurons))
@@ -275,6 +285,11 @@ def myClassifier(nIn, nOut, compileArgs, dropout_rate=0.0, learn_rate=0.001):
     compileArgs['optimizer'] = optimizer
     model.compile(**compileArgs)
     return model
+
+def assure_path_exists(path):
+    dir = os.path.dirname(path)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
 # Selected range
 

@@ -19,7 +19,7 @@ from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from scipy.stats import ks_2samp
 #import matplotlib.pyplot as plt
 import localConfig as cfg
-from commonFunctions import StopDataLoader, FullFOM, getYields
+from commonFunctions import StopDataLoader, FullFOM, getYields, getDefinedClassifier
 import pickle
 import sys
 from math import log
@@ -38,7 +38,9 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--layers', type=int, required=False, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, required=False, help='Number of neurons per layer')
     parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
-    parser.add_argument('-bs', '--batchSize', type=int, required=True, help='Batch size')
+    parser.add_argument('-b', '--batchSize', type=int, required=True, help='Batch size')
+    parser.add_argument('-o', '--outputDir', required=True, help='Output directory')
+
 
     args = parser.parse_args()
 
@@ -51,20 +53,14 @@ if __name__ == "__main__":
 
     print "Opening file"
 
-    runNum = 1
-    filepath = cfg.lgbk+"Searches/"
-
-    while os.path.exists(filepath+"run"+str(runNum)):
-        runNum += 1
-
-    filepath = filepath+"run"+str(runNum)
+    filepath = args.outputDir
 
     os.mkdir(filepath)
     os.mkdir(filepath+"/accuracy")
     os.mkdir(filepath+"/loss")
     os.chdir(filepath)
 
-    name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
+    name = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
     f = open(name+'.txt', 'w')
 
     for y in [1,2,3]:   # LAYERS
@@ -75,7 +71,8 @@ if __name__ == "__main__":
             model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
             history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
 
-    	name = "L"+str(y)+"_N"+str(x)+"_"+train_DM+"_run"+str(runNum)
+        name = "L"+str(y)+"_N"+str(x)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_TP"+test_point+"_"+dataset_used
+
 
     	acc = history.history["acc"]
         #val_acc = history.history['val_acc']
@@ -157,12 +154,3 @@ if __name__ == "__main__":
         f.write(str(max_FOM)+"\n")
 
     sys.exit("Done!")
-
-def getDefinedClassifier(nIn, nOut, compileArgs, neurons=12, layers=1):
-model = Sequential()
-model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-    for x in range(0, layers-1):
-        model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
-model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
-model.compile(**compileArgs)
-return model
