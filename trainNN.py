@@ -42,7 +42,7 @@ if __name__ == "__main__":
     learning_rate = args.learningRate
     my_decay = args.decay
     dropout_rate = args.dropoutRate
-    dataset_used = "full+pre" #or "skimmed"
+    dataset_used = "Chimera"#"summerData"#"full+pre" #or "skimmed"
 
     verbose = 0
     if args.verbose:
