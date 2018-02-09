@@ -19,7 +19,6 @@ from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from scipy.stats import ks_2samp
 #import matplotlib.pyplot as plt
 import localConfig as cfg
-from commonFunctions import StopDataLoader, FullFOM, getYields, getDefinedClassifier
 import pickle
 import sys
 from math import log
@@ -52,26 +51,32 @@ if __name__ == "__main__":
     myAdam = Adam(lr=learning_rate, decay=my_decay)
     compileArgs['optimizer'] = myAdam
 
-    print "Opening file"
+    if args.verbose:
+        print "Opening file"
 
     filepath = args.outputDir
 
-    os.mkdir(filepath+"/accuracy")
-    os.mkdir(filepath+"/loss")
     os.chdir(filepath)
+    os.mkdir("/accuracy")
+    os.mkdir("/loss")
 
     name = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
     f = open(name+'.txt', 'w')
 
+    from commonFunctions import StopDataLoader, FullFOM, getYields, getDefinedClassifier
+
     for y in [1,2,3]:   # LAYERS
         for x in range(2, 101):    # NEURONS
-            print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
+            if args.verbose:
+                print "  ==> #LAYERS:", y, "   #NEURONS:", x, " <=="
+                print("Starting the training")
 
-            print("Starting the training")
-            model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y)
+            model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y, args.dropoutRate)
             history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
 
             name = "L"+str(y)+"_N"+str(x)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_TP"+test_point+"_DT"+suffix
+            if args.verbose:
+                print name
 
             acc = history.history["acc"]
             #val_acc = history.history['val_acc']
@@ -85,17 +90,19 @@ if __name__ == "__main__":
                 json_file.write(model_json)
                 model.save_weights(name + ".h5")
 
-            print("Getting predictions")
+            if args.verbose:
+                print("Getting predictions")
             devPredict = model.predict(XDev)
             valPredict = model.predict(XVal)
-
-            print("Getting scores")
+            if args.verbose:
+                print("Getting scores")
 
             scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
             scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
             cohen_kappa=cohen_kappa_score(YVal, valPredict.round())
 
-            print "Calculating FOM:"
+            if args.verbose:
+                print "Calculating FOM:"
             dataDev["NN"] = devPredict
             dataVal["NN"] = valPredict
 
@@ -129,7 +136,8 @@ if __name__ == "__main__":
 
             max_FOM=0
 
-            print "Maximizing FOM"
+            if args.verbose:
+                print "Maximizing FOM"
             for cv_0 in fomEvo:
                 if cv_0>max_FOM:
                     max_FOM=cv_0
