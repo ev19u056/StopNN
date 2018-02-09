@@ -51,10 +51,10 @@ bkgDatasets = [
                 "Wjets_800to1200",
                 "Wjets_1200to2500",
                 "Wjets_2500toInf",
-#                "TTJets_DiLepton",
-#                "TTJets_SingleLeptonFromTbar",
-#                "TTJets_SingleLeptonFromT",
-                "TT_pow"
+                #"TTJets_DiLepton",
+                #"TTJets_SingleLeptonFromTbar",
+                #"TTJets_SingleLeptonFromT",
+                "TT_pow",
                 "ZJetsToNuNu_HT100to200",
                 "ZJetsToNuNu_HT200to400",
                 "ZJetsToNuNu_HT400to600",
@@ -89,14 +89,13 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
-  '''
+  
   testPath = "nTuples_v2017-10-19_test"+suffix+"/"
   trainPath = "nTuples_v2017-10-19_train"+suffix+"/"
-  '''
-
-  testPath = "test/"
-  trainPath = "train/"
-
+  
+  #testPath = "test/"
+  #trainPath = "train/"
+  
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
                                 path + testPath + sigName_test + suffix + ".root",

@@ -40,6 +40,7 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
     parser.add_argument('-b', '--batchSize', type=int, required=True, help='Batch size')
     parser.add_argument('-o', '--outputDir', required=True, help='Output directory')
+    parser.add_argument('-p', '--dropoutRate', type=float, default=0, help='Dropout Rate')
 
 
     args = parser.parse_args()
@@ -55,7 +56,6 @@ if __name__ == "__main__":
 
     filepath = args.outputDir
 
-    os.mkdir(filepath)
     os.mkdir(filepath+"/accuracy")
     os.mkdir(filepath+"/loss")
     os.chdir(filepath)

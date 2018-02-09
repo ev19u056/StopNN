@@ -31,31 +31,31 @@ if __name__ == "__main__":
         lrArray = lrArray + [0.0001, 0.0003, 0.001, 0.01, 0.05, 0.1, 0.5, 5]
 
     for epoch in eArray:
-        for bacthSize in bsArray:
+        for batchSize in bsArray:
             for decay in dArray:
                 for learningRate in lrArray:
-                    baseName = filepath + "E"+str(epoch)+"_Bs"+str(bacthSize)+"_Lr"+str(learningRate) + "_D" + str(decay) + "/"
+                    baseName = filepath + "E"+str(epoch)+"_Bs"+str(batchSize)+"_Lr"+str(learningRate) + "_D" + str(decay) + "/"
                     assure_path_exists(baseName+"dummy.txt")
                     with open(baseName+'manualGridSearch.sh', 'w') as f:
-                        f.write("#!/bin/bash")
-                        f.write("#$ -cwd")
-                        f.write("#$ -pe mcore 3")
-                        f.write("#$ -l container=True")
-                        f.write("#...$ -v CONTAINER=CENTOS7")
-                        f.write("#$ -v CONTAINER=UBUNTU16")
-                        f.write("#...$ -v SGEIN=script.py")
-                        f.write("#...$ -v SGEIN=pima-indians-diabetes.data")
-                        f.write("#...$ -v SGEOUT=accuracy.pickle")
-                        f.write("#...$ -v SGEOUT=loss.pickle")
-                        f.write("#$ -l gpu,release=el7")
-                        f.write("cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/")
-                        f.write("module load root-6.10.02")
-                        f.write("python manualGridSearch.py + -lr " + str(learningRate) +" -d " + str(decay) + " -e " + str(epoch) + " -b "+ str(batchSize) + " -o " + baseName)
+                        f.write("#!/bin/bash\n")
+                        f.write("#$ -cwd\n")
+                        f.write("#$ -pe mcore 3\n")
+                        f.write("#$ -l container=True\n")
+                        f.write("#...$ -v CONTAINER=CENTOS7\n")
+                        f.write("#$ -v CONTAINER=UBUNTU16\n")
+                        f.write("#...$ -v SGEIN=script.py\n")
+                        f.write("#...$ -v SGEIN=pima-indians-diabetes.data\n")
+                        f.write("#...$ -v SGEOUT=accuracy.pickle\n")
+                        f.write("#...$ -v SGEOUT=loss.pickle\n")
+                        f.write("#$ -l gpu,release=el7\n")
+                        f.write("cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/\n")
+                        f.write("module load root-6.10.02\n")
+                        f.write("python manualGridSearch.py -r " + str(learningRate) +" -d " + str(decay) + " -e " + str(epoch) + " -b "+ str(batchSize) + " -o " + baseName+"\n")
 
                         mode = os.fstat(f.fileno()).st_mode
                         mode |= 0o111
                         os.fchmod(f.fileno(), mode & 0o7777)
 
-                    submissionCmd = "qsub " + baseName + "manualGridSearch.sh"
+                    submissionCmd = "qsub -e " + baseName + "log.err -o "+ baseName + "log.out " + baseName + "manualGridSearch.sh"
                     p = subprocess.Popen(submissionCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     out, err = p.communicate()
