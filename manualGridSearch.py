@@ -54,16 +54,16 @@ if __name__ == "__main__":
     if args.verbose:
         print "Opening file"
 
+    from commonFunctions import StopDataLoader, FullFOM, getYields, getDefinedClassifier, assure_path_exists
     filepath = args.outputDir
 
+    assure_path_exists(filepath+"/accuracy")
+    assure_path_exists(filepath+"/loss")
     os.chdir(filepath)
-    os.mkdir("/accuracy")
-    os.mkdir("/loss")
 
     name = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
     f = open(name+'.txt', 'w')
 
-    from commonFunctions import StopDataLoader, FullFOM, getYields, getDefinedClassifier
 
     for y in [1,2,3]:   # LAYERS
         for x in range(2, 101):    # NEURONS
