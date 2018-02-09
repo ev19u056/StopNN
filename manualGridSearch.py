@@ -57,8 +57,8 @@ if __name__ == "__main__":
     from commonFunctions import StopDataLoader, FullFOM, getYields, getDefinedClassifier, assure_path_exists
     filepath = args.outputDir
 
-    assure_path_exists(filepath+"/accuracy")
-    assure_path_exists(filepath+"/loss")
+    assure_path_exists(filepath+"/accuracy/"+"dummy.txt")
+    assure_path_exists(filepath+"/loss/"+"dummy.txt")
     os.chdir(filepath)
 
     name = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
