@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     plt.legend(layers_legend, loc='best')
     if args.file != None:
-        plt.savefig("ROC_"+model_name)
+        plt.savefig('ROC_'+model_name+'.pdf')
     else:
         plt.savefig("ROC_run"+str(runNum)+"_"+str(test_point)+"_"+str(learning_rate)+"_"+str(my_decay)+".png")
     plt.show()
