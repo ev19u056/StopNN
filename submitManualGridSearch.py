@@ -24,7 +24,7 @@ if __name__ == "__main__":
     if args.scanEpochs:
         eArray = eArray + [500, 1000]
     if args.scanBatchSize:
-        bsArray = bsArray + [300, 3000, 300000]
+        bsArray = bsArray + [50, 300, 500, 3000, 5000, 300000]
     if args.scanLearningRateDecay:
         dArray = dArray + [0.1]
     if args.scanLearningRate:
