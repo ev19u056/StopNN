@@ -21,8 +21,8 @@ if __name__ == "__main__":
 
     if args.file != None:
         model_name = args.file
-        learning_rate = name[name.find("Lr")+2:name.find("_D")]
-        my_decay = str(float(name[name.find("_D")+2:]))
+        learning_rate = model_name[model_name.find("Lr")+2:model_name.find("_D")]
+        my_decay = str(float(model_name[model_name.find("_D")+2:]))
         filepath = cfg.lgbk+"Searches/"+model_name
         os.chdir(filepath)
         name = "mGS:outputs_run_"+test_point+"_"+learning_rate+"_"+my_decay
