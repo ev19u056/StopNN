@@ -56,15 +56,15 @@ if __name__ == "__main__":
 
     from commonFunctions import StopDataLoader, FullFOM, getYields, getDefinedClassifier, assure_path_exists
     filepath = args.outputDir
+    baseName = filepath.replace(cfg.lgbk,"")
+    baseName = baseName.replace("/","")
+    fileToPlot = "ROC_" + baseName
 
     assure_path_exists(filepath+"/accuracy/"+"dummy.txt")
     assure_path_exists(filepath+"/loss/"+"dummy.txt")
     os.chdir(filepath)
 
     #fileToPlot = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
-    baseName = filepath[filepath.find("/E")+1:]
-    print baseName
-    fileToPlot = "ROC_" + baseName
 
     f = open(fileToPlot+'.txt', 'w')
 
