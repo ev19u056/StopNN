@@ -11,24 +11,34 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process the command line options')
 #   parser.add_argument('-c', '--configFile', required=True, help='Configuration file describing the neural network topology and options as well as the samples to process')
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
-    parser.add_argument('-r', '--runNum', type=int, required=True, help='Run number')
-    parser.add_argument('-l', '--learningRate', type=float, required=True, help='Learning rate')
-    parser.add_argument('-d', '--decay', type=float, required=True, help='Learning rate decay')
+    parser.add_argument('-r', '--runNum', type=int, help='Run number')
+    parser.add_argument('-l', '--learningRate', type=float, help='Learning rate')
+    parser.add_argument('-d', '--decay', type=float, help='Learning rate decay')
+    parser.add_argument('-f', '--file', help='File name')
 
 
     args = parser.parse_args()
 
-    runNum = args.runNum
-    learning_rate = args.learningRate
-    my_decay = args.decay
-    test_point = "550_520"
-    filepath = cfg.lgbk+"Searches/run"+str(runNum)
-    os.chdir(filepath)
+    if args.file != None:
+        model_name = args.file
+        learning_rate = name[name.find("Lr")+2:name.find("_D")]
+        my_decay = str(float(name[name.find("_D")+2:]))
+        filepath = cfg.lgbk+"Searches/"+model_name
+        os.chdir(filepath)
+        name = "mGS:outputs_run_"+test_point+"_"+learning_rate+"_"+my_decay
+    else:
+        runNum = args.runNum
+        learning_rate = args.learningRate
+        my_decay = args.decay
+        test_point = "550_520"
+        filepath = cfg.lgbk+"Searches/run"+str(runNum)
+        os.chdir(filepath)
+        name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
+
 
     #f = open(filepath+name+'.txt', 'r')
     # Until run5
     #name = "mGS:outputs_run"+str(runNum)+"_"+test_point
-    name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
 
     f = open(name + '.txt', 'r')
 
@@ -73,5 +83,8 @@ if __name__ == "__main__":
         plt.plot(neurons[i*lim:(i+1)*lim], roc_AUC[i*lim:(i+1)*lim])
 
     plt.legend(layers_legend, loc='best')
-    plt.savefig("ROC_run"+str(runNum)+"_"+str(test_point)+"_"+str(learning_rate)+"_"+str(my_decay)+".png")
+    if args.file != None:
+        plt.savefig("ROC_"+model_name)
+    else:
+        plt.savefig("ROC_run"+str(runNum)+"_"+str(test_point)+"_"+str(learning_rate)+"_"+str(my_decay)+".png")
     plt.show()
