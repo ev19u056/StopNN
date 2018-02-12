@@ -62,7 +62,7 @@ if __name__ == "__main__":
     os.chdir(filepath)
 
     #fileToPlot = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
-    fileToPlot = "ROC_"+filepath[filepath.find("/E")+1:]
+    fileToPlot = str("ROC_"+filepath[filepath.find("/E")+1:])
 
     f = open(fileToPlot+'.txt', 'w')
 
