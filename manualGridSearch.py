@@ -61,10 +61,10 @@ if __name__ == "__main__":
     assure_path_exists(filepath+"/loss/"+"dummy.txt")
     os.chdir(filepath)
 
-    #name = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
-    name = "ROC_"+filepath
-    f = open(name+'.txt', 'w')
+    #fileToPlot = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
+    fileToPlot = "ROC_"+filepath[filepath.find("/E")+1:]
 
+    f = open(fileToPlot+'.txt', 'w')
 
     for y in [1,2,3]:   # LAYERS
         for x in range(2, 101):    # NEURONS
