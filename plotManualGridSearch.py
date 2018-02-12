@@ -19,6 +19,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    test_point = "550_520"
+
     if args.file != None:
         model_name = args.file
         learning_rate = model_name[model_name.find("Lr")+2:model_name.find("_D")]
@@ -30,7 +32,6 @@ if __name__ == "__main__":
         runNum = args.runNum
         learning_rate = args.learningRate
         my_decay = args.decay
-        test_point = "550_520"
         filepath = cfg.lgbk+"Searches/run"+str(runNum)
         os.chdir(filepath)
         name = "mGS:outputs_run"+str(runNum)+"_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
