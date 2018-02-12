@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     from commonFunctions import StopDataLoader, FullFOM, getYields, getDefinedClassifier, assure_path_exists
     filepath = args.outputDir
-    baseName = filepath.replace(cfg.lgbk,"")
+    baseName = filepath.replace(cfg.lgbk+"Searches/","")
     baseName = baseName.replace("/","")
     fileToPlot = "ROC_" + baseName
 
