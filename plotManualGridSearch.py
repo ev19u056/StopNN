@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     if args.file != None:
         model_name = args.file
-        learning_rate = model_name[model_name.find("Lr")+2:model_name.find("_D")]
+        learning_rate = str(float(model_name[model_name.find("Lr")+2:model_name.find("_D")]))
         my_decay = str(float(model_name[model_name.find("_D")+2:]))
         filepath = cfg.lgbk+"Searches/"+model_name
         os.chdir(filepath)
