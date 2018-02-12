@@ -61,7 +61,8 @@ if __name__ == "__main__":
     assure_path_exists(filepath+"/loss/"+"dummy.txt")
     os.chdir(filepath)
 
-    name = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
+    #name = "mGS:outputs_run_"+test_point+"_"+str(learning_rate)+"_"+str(my_decay)
+    name = "ROC_"+filepath
     f = open(name+'.txt', 'w')
 
 

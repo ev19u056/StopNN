@@ -23,11 +23,12 @@ if __name__ == "__main__":
 
     if args.file != None:
         model_name = args.file
-        learning_rate = str(float(model_name[model_name.find("Lr")+2:model_name.find("_D")]))
-        my_decay = str(float(model_name[model_name.find("_D")+2:]))
+        #learning_rate = str(float(model_name[model_name.find("Lr")+2:model_name.find("_D")]))
+        #my_decay = str(float(model_name[model_name.find("_D")+2:]))
         filepath = cfg.lgbk+"Searches/"+model_name
         os.chdir(filepath)
-        name = "mGS:outputs_run_"+test_point+"_"+learning_rate+"_"+my_decay
+        name = "ROC_"+model_name
+        #name = "mGS:outputs_run_"+test_point+"_"+learning_rate+"_"+my_decay
     else:
         runNum = args.runNum
         learning_rate = args.learningRate
@@ -85,6 +86,7 @@ if __name__ == "__main__":
 
     plt.legend(layers_legend, loc='best')
     if args.file != None:
+        plt.savefig(name+'.pdf')
         plt.savefig('ROC_'+model_name+'.pdf')
     else:
         plt.savefig("ROC_run"+str(runNum)+"_"+str(test_point)+"_"+str(learning_rate)+"_"+str(my_decay)+".png")
