@@ -77,7 +77,7 @@ if __name__ == "__main__":
     plt.xlabel("Number of Neurons")
     plt.ylabel('Roc AUC')
     plt.suptitle("Roc curve integral for several configurations of Neural Nets", fontsize=13, fontweight='bold')
-    plt.title("Learning rate: {0}\nDecay: {1}".format(learning_rate, my_decay), fontsize=10)
+    #plt.title("Learning rate: {0}\nDecay: {1}".format(learning_rate, my_decay), fontsize=10)
 
     lim = len(neurons)/nLayers
 
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     plt.legend(layers_legend, loc='best')
     if args.file != None:
-        plt.savefig(name+'.pdf')
+#        plt.savefig(name+'.pdf')
         plt.savefig('ROC_'+model_name+'.pdf')
     else:
         plt.savefig("ROC_run"+str(runNum)+"_"+str(test_point)+"_"+str(learning_rate)+"_"+str(my_decay)+".png")
