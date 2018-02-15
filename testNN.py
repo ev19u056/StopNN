@@ -51,7 +51,7 @@ if __name__ == "__main__":
     if args.file != None:
         model_name = args.file
     else:
-        model_name = "L"+str(y)+"_N"+str(x)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
+        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
 
     if args.singleNN:
         filepath = cfg.lgbk + "SingleNN/" + model_name
