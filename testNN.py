@@ -40,8 +40,8 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--allPlots', action='store_true', help='Wether to plot all graphs')
     parser.add_argument('-p', '--dropoutRate', type=float, default=0, help='Dropout Rate')
     parser.add_argument('-dc', '--decay', type=float, default=0, help='Learning rate decay')
-    parser.add_argument('-z', '--local', action='store_true', help='Learning rate decay')
-
+    parser.add_argument('-z', '--local', action='store_true', help='Local file')
+    parser.add_argument('-x', '--GridSearchNewNaming', action='store_true', help='File on new grid search naming')
 
 
     #parser.add_argument('-', '--', action='store_true', help='')
@@ -55,6 +55,12 @@ if __name__ == "__main__":
 
     if args.singleNN:
         filepath = cfg.lgbk + "SingleNN/" + model_name
+    elif args.GridSearchNewNaming:
+        filepath = cfg.lgbk + "Searches/"+ model_name
+        nLayers = args.layers
+        nNeurons = args.neurons
+        model_name = "L"+str(nLayers)+"N_"+str(nNeurons)+model_name+"_TP550_520_DT_skimmed"
+        model_name = model_name.replace("r","")
     elif args.runNum != None:
         filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
     elif args.local:
@@ -63,6 +69,8 @@ if __name__ == "__main__":
 
 
     os.chdir(filepath)
+        E300_Bs30000_Lr0.003_D0
+    L3_N99_E300_Bs30000_Lr0.003_Dr0_TP550_520_DT_skimmed
 
     print "Loading Model ..."
     with open(model_name+'.json', 'r') as json_file:
@@ -219,7 +227,7 @@ if __name__ == "__main__":
     plt.title('ROC curve')
     rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal)]
     plt.legend(rocLegend, loc='best')
-    plt.savefig('ROC_'+model_name+'.png', bbox_inches='tight')
+    plt.savefig('ROC_'+model_name+'.pdf', bbox_inches='tight')
     plt.show()
 
     sys.exit("Done!")
