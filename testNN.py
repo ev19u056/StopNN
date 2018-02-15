@@ -59,7 +59,7 @@ if __name__ == "__main__":
         filepath = cfg.lgbk + "Searches/"+ model_name
         nLayers = args.layers
         nNeurons = args.neurons
-        model_name = "L"+str(nLayers)+"N_"+str(nNeurons)+model_name+"_TP550_520_DT_skimmed"
+        model_name = "L"+str(nLayers)+"_N"+str(nNeurons)+"_"+model_name+"_TP550_520_DT_skimmed"
         model_name = model_name.replace("r","")
     elif args.runNum != None:
         filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
