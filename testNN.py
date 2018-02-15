@@ -66,11 +66,7 @@ if __name__ == "__main__":
     elif args.local:
         filepath = "/home/diogo/PhD/SingleNN/" + model_name
 
-
-
     os.chdir(filepath)
-        E300_Bs30000_Lr0.003_D0
-    L3_N99_E300_Bs30000_Lr0.003_Dr0_TP550_520_DT_skimmed
 
     print "Loading Model ..."
     with open(model_name+'.json', 'r') as json_file:
