@@ -24,6 +24,7 @@ import sys
 from keras.models import model_from_json
 from prepareDATA import *
 
+
 if __name__ == "__main__":
     import argparse
     import sys
@@ -36,13 +37,21 @@ if __name__ == "__main__":
     parser.add_argument('-n', '--neurons', type=int, help='Number of neurons per layer')
     parser.add_argument('-s', '--singleNN', action='store_true', help='Whether this NN is stored in the Searches or SingleNN folder')
     parser.add_argument('-r', '--runNum', type=int, help='Run number')
+    parser.add_argument('-a', '--allPlots', action='store_true', help='Wether to plot all graphs')
+    parser.add_argument('-p', '--dropoutRate', type=float, default=0, help='Dropout Rate')
+    parser.add_argument('-dc', '--decay', type=float, default=0, help='Learning rate decay')
+    parser.add_argument('-z', '--local', action='store_true', help='Learning rate decay')
+
+
+
+    #parser.add_argument('-', '--', action='store_true', help='')
 
     args = parser.parse_args()
 
     if args.file != None:
         model_name = args.file
     else:
-        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_550_520_run"+str(args.runNum)
+        model_name = "L"+str(y)+"_N"+str(x)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
 
     if args.singleNN:
         filepath = cfg.lgbk + "SingleNN/" + model_name
@@ -50,6 +59,8 @@ if __name__ == "__main__":
         filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
     elif args.local:
         filepath = "/home/diogo/PhD/SingleNN/" + model_name
+
+
 
     os.chdir(filepath)
 
@@ -146,10 +157,13 @@ if __name__ == "__main__":
     print "   Sig Yield", sigYield
     print "   Bkg Yield", bkgYield
 
-    roc_integral = roc_auc_score(dataVal.category, dataVal.NN)
-    fpr, tpr, _ = roc_curve(dataVal.category, dataVal.NN)
+    roc_integralDev = roc_auc_score(dataDev.category, dataDev.NN)
+    roc_integralVal = roc_auc_score(dataVal.category, dataVal.NN)
+    fprDev, tprDev, _Dev = roc_curve(dataDev.category, dataDev.NN)
+    fprVal, tprVal, _Val = roc_curve(dataVal.category, dataVal.NN)
 
-    print "ROC Curve Integral:", roc_integral
+    print "ROC Curve IntegralDev:", roc_integralDev
+    print "ROC Curve IntegralVal:", roc_integralVal
 
     print "Plotting"
 
@@ -198,11 +212,13 @@ if __name__ == "__main__":
     plt.savefig('FOM_'+model_name+'.png', bbox_inches='tight')
     plt.show()
 
-    plt.plot(fpr, tpr)
+    plt.plot(fprDev, tprDev, '--')
+    plt.plot(fprVal, tprVal)
     plt.xlabel('False positive rate')
     plt.ylabel('True positive rate')
     plt.title('ROC curve')
-    plt.legend(["Integral: {0}".format(roc_integral)],loc='best')
+    rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal)]
+    plt.legend(rocLegend, loc='best')
     plt.savefig('ROC_'+model_name+'.png', bbox_inches='tight')
     plt.show()
 
