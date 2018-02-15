@@ -45,7 +45,7 @@ if __name__ == "__main__":
         model_name = model_name+"_TP550_520_DT_skimmed"
     elif args.runNum != None:
         filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
-        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_"+test_point+"_run"+str(args.runNum)
+        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_550_520_run"+str(args.runNum)
     elif args.local:
         filepath = "/home/diogo/PhD/SingleNN/" + model_name
 
