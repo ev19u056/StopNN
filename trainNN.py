@@ -74,11 +74,13 @@ if __name__ == "__main__":
     val_acc = history.history['val_acc']
     loss = history.history['loss']
     val_loss = history.history['val_loss']
-
-    pickle.dump(acc, open("accuracy.pickle", "wb"))
-    pickle.dump(loss, open("loss.pickle", "wb"))
-    pickle.dump(val_acc, open("val_accuracy.pickle", "wb"))
-    pickle.dump(val_loss, open("val_loss.pickle", "wb"))
+    
+    assure_path_exists(filepath+"/accuracy/"+"dummy.txt")
+    assure_path_exists(filepath+"/loss/"+"dummy.txt
+    pickle.dump(acc, open("accuracy/acc_"+name+".pickle", "wb"))
+    pickle.dump(loss, open("loss/loss_"+name+".pickle", "wb"))
+    pickle.dump(val_acc, open("accuracy/val_acc_"+name+".pickle", "wb"))
+    pickle.dump(val_loss, open("loss/val_loss_"+name+".pickle", "wb"))
 
     if args.verbose:
         print("Training took ", time.time()-start, " seconds")

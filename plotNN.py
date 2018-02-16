@@ -31,7 +31,6 @@ if __name__ == "__main__":
     parser.add_argument('-k', '--local', action='store_true', help='Local file')
     parser.add_argument('-d', '--preview', action='store_true', help='Preview plots')
 
-
 #    parser.add_argument('-b', '--batch', action='store_true', help='Whether this is a batch job, if it is, no interactive questions will be asked and answers will be assumed')
 #    parser.add_argument('-p', '--dropoutRate', type=float, default=0, help='Dropout Rate')
 #    parser.add_argument('-dc', '--decay', type=float, default=0, help='Learning rate decay')
@@ -43,6 +42,9 @@ if __name__ == "__main__":
     from keras.models import model_from_json
     from sklearn.metrics import cohen_kappa_score
 
+    loss_path = ""
+    acc_path = ""
+
     if args.file != None:
         model_name = args.file
     else:
@@ -51,7 +53,6 @@ if __name__ == "__main__":
 
     if args.singleNN:
         filepath = cfg.lgbk + "SingleNN/" + model_name
-
     elif args.gridSearch:
         filepath = cfg.lgbk + "Searches/"+ model_name
         nLayers = args.layers
@@ -59,9 +60,13 @@ if __name__ == "__main__":
         model_name = "L"+str(nLayers)+"_N"+str(nNeurons)+"_"+model_name
         model_name = model_name.replace("D","Dr")
         model_name = model_name+"_TP"+test_point+"_DT"+suffix
+        loss_path = "loss/"
+        acc_path = "accuracy/"
     elif args.runNum != None:
         filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
         model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_"+test_point+"_run"+str(args.runNum)
+        loss_path = "loss/"
+        acc_path = "accuracy/"
     elif args.local:
         filepath = "/home/diogo/PhD/SingleNN/" + model_name
 
@@ -102,10 +107,37 @@ if __name__ == "__main__":
         args.stucture = True
 
     if args.loss:
-        print "Code missing"
+        import pickle
+        loss = pickle.load(open(loss_path+"loss_"+model_name+".pickle", "rb"))
+#        val_loss = pickle.load(open("loss/val_loss_"+name+".pickle", "wb"))
+        plt.plot(loss)
+#        plt.plot(loss_val['val_acc'])
+        plt.title('Model loss')
+        plt.ylabel('Loss')
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+        plt.xlabel('Epoch')
+        plt.legend(['train'], loc='best')
+#        plt.legend(['train', 'test'], loc='best')
+        plt.savefig('loss_'+model_name+'.pdf')
+        if args.preview:
+            plt.show()
 
     if args.accuracy:
-        print "Code missing"
+        import pickle
+        acc = pickle.load(open(acc_path+"acc_"+model_name+".pickle", "rb"))
+#        val_acc = pickle.load(open("acc/val_acc_"+name+".pickle", "wb"))
+        plt.plot(acc)
+#        plt.plot(acc_val['val_acc'])
+        plt.title('Model accuracy')
+        plt.ylabel('Accuracy')
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+        plt.xlabel('Epoch')
+        plt.legend(['train'], loc='best')
+#        plt.legend(['train', 'test'], loc='best')
+        plt.savefig('acc_'+model_name+'.pdf')
+        if args.preview:
+            plt.show()
+
     if args.overtrainingCheck:
         print "Code missing"
     if args.prediction:

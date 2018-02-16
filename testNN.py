@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
     scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
-    print ""
+
     cohen_kappa=cohen_kappa_score(YVal, valPredict.round())
 
     print "Calculating parameters"
