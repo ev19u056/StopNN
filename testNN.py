@@ -174,7 +174,7 @@ if __name__ == "__main__":
     print "Plotting"
 
     plt.figure(figsize=(7,6))
-    plt.yscale('log')
+    #plt.yscale('log')
     plt.hist(sig_dataDev["NN"], 50, facecolor='blue', alpha=0.7, normed=1, weights=sig_dataDev["weight"])
     plt.hist(bkg_dataDev["NN"], 50, facecolor='red', alpha=0.7, normed=1, weights=bkg_dataDev["weight"])
     plt.hist(sig_dataVal["NN"], 50, color='blue', alpha=1, normed=1, weights=sig_dataVal["weight"], histtype="step")
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweight='bold')
     plt.title("Cohen's kappa: {0}\nKolmogorov Smirnov test: {1}".format(cohen_kappa, km_value[1]), fontsize=10)
     plt.legend(['Signal (Test sample)', 'Background (Test sample)', 'Signal (Train sample)', 'Background (Train sample)'], loc='upper right')
-    plt.savefig('hist_'+model_name+'.png', bbox_inches='tight')
+    plt.savefig('hist_'+model_name+'.pdf', bbox_inches='tight')
     plt.show()
 
 

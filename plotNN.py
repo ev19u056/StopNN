@@ -1,6 +1,13 @@
 '''
 Test the Neural Network
 '''
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+import keras
+import pandas
+import root_numpy
+import numpy as np
+
 if __name__ == "__main__":
     import argparse
     import sys
@@ -9,24 +16,81 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
     parser.add_argument('-f', '--file', required=True, help='File name')
     parser.add_argument('-a', '--allPlots', action='store_true', help='Wether to plot all graphs')
-    parser.add_argument('-l', '--loss', action='store_true', help='Loss plot')
+    parser.add_argument('-b', '--loss', action='store_true', help='Loss plot')
     parser.add_argument('-c', '--accuracy', action='store_true', help='Accuracy plot')
     parser.add_argument('-o', '--overtrainingCheck', action='store_true', help='Wether there was overtraining')
     parser.add_argument('-p', '--prediction', action='store_true', help='Predictions plot')
     parser.add_argument('-r', '--areaUnderROC', action='store_true', help='Area under ROC plot')
-
-    parser.add_argument('-b', '--batch', action='store_true', help='Whether this is a batch job, if it is, no interactive questions will be asked and answers will be assumed')
-#    parser.add_argument('-l', '--layers', type=int, help='Number of layers')
+    parser.add_argument('-w', '--weights', action='store_true', help='Plotn neural network weights')
+    parser.add_argument('-z', '--stucture', action='store_true', help='Plotn neural network structure')
+    parser.add_argument('-l', '--layers', type=int, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, help='Number of neurons per layer')
+    parser.add_argument('-x', '--gridSearch', action='store_true', help='File on grid search')
     parser.add_argument('-s', '--singleNN', action='store_true', help='Whether this NN is stored in the Searches or SingleNN folder')
-#    parser.add_argument('-r', '--runNum', type=int, help='Run number')
+    parser.add_argument('-u', '--runNum', type=int, help='Run number')
+    parser.add_argument('-k', '--local', action='store_true', help='Local file')
+    parser.add_argument('-d', '--preview', action='store_true', help='Preview plots')
+
+
+#    parser.add_argument('-b', '--batch', action='store_true', help='Whether this is a batch job, if it is, no interactive questions will be asked and answers will be assumed')
 #    parser.add_argument('-p', '--dropoutRate', type=float, default=0, help='Dropout Rate')
-    parser.add_argument('-dc', '--decay', type=float, default=0, help='Learning rate decay')
-
-
-    #parser.add_argument('-', '--', action='store_true', help='')
+#    parser.add_argument('-dc', '--decay', type=float, default=0, help='Learning rate decay')
 
     args = parser.parse_args()
+
+    from prepareDATA import *
+    import matplotlib.pyplot as plt
+    from keras.models import model_from_json
+    from sklearn.metrics import cohen_kappa_score
+
+    if args.file != None:
+        model_name = args.file
+    else:
+        print "Code missing"
+#        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
+
+    if args.singleNN:
+        filepath = cfg.lgbk + "SingleNN/" + model_name
+
+    elif args.gridSearch:
+        filepath = cfg.lgbk + "Searches/"+ model_name
+        nLayers = args.layers
+        nNeurons = args.neurons
+        model_name = "L"+str(nLayers)+"_N"+str(nNeurons)+"_"+model_name
+        model_name = model_name.replace("D","Dr")
+        model_name = model_name+"_TP"+test_point+"_DT"+suffix
+    elif args.runNum != None:
+        filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
+        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_"+test_point+"_run"+str(args.runNum)
+    elif args.local:
+        filepath = "/home/diogo/PhD/SingleNN/" + model_name
+
+    os.chdir(filepath)
+
+    if args.verbose:
+        print "Loading Model ..."
+    with open(model_name+'.json', 'r') as json_file:
+      loaded_model_json = json_file.read()
+    model = model_from_json(loaded_model_json)
+    model.load_weights(model_name+".h5")
+    model.compile(loss = 'binary_crossentropy', optimizer = 'adam')
+
+    if args.verbose:
+        print("Getting predictions")
+    devPredict = model.predict(XDev)
+    valPredict = model.predict(XVal)
+
+    if args.verbose:
+        print("Getting scores")
+
+    scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
+    scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
+
+    cohen_kappa=cohen_kappa_score(YVal, valPredict.round())
+    if args.verbose:
+        print "Calculating parameters"
+    dataDev["NN"] = devPredict
+    dataVal["NN"] = valPredict
 
     if args.allPlots:
         args.loss = True
@@ -34,62 +98,63 @@ if __name__ == "__main__":
         args.overtrainingCheck = True
         args.prediction = True
         args.areaUnderROC = True
+        args.weights = True
+        args.stucture = True
 
     if args.loss:
+        print "Code missing"
 
     if args.accuracy:
+        print "Code missing"
     if args.overtrainingCheck:
+        print "Code missing"
     if args.prediction:
+        print "Code missing"
     if args.areaUnderROC:
+        from sklearn.metrics import roc_auc_score, roc_curve
+
+        roc_integralDev = roc_auc_score(dataDev.category, dataDev.NN)
+        roc_integralVal = roc_auc_score(dataVal.category, dataVal.NN)
+        fprDev, tprDev, _Dev = roc_curve(dataDev.category, dataDev.NN)
+        fprVal, tprVal, _Val = roc_curve(dataVal.category, dataVal.NN)
+        if args.verbose:
+            print "ROC Curve IntegralDev:", roc_integralDev
+            print "ROC Curve IntegralVal:", roc_integralVal
+
+        plt.plot(fprDev, tprDev, '--')
+        plt.plot(fprVal, tprVal)
+        plt.xlabel('False positive rate')
+        plt.ylabel('True positive rate')
+        plt.title('ROC curve')
+        rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal)]
+        plt.legend(rocLegend, loc='best')
+        plt.savefig('ROC_'+model_name+'.pdf', bbox_inches='tight')
+        if args.preview:
+            plt.show()
 
 
 
 
 
-
-    if args.file != None:
-        model_name = args.file
-    else:
-        model_name = "L"+str(y)+"_N"+str(x)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
-
-    if args.singleNN:
-        filepath = cfg.lgbk + "SingleNN/" + model_name
-    elif args.runNum != None:
-        filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
-    elif args.local:
-        filepath = "/home/diogo/PhD/SingleNN/" + model_name
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
-import root_numpy
-import numpy as np
-import pandas
-import keras
+'''
 import time
 from sklearn.externals import joblib
 from sklearn.preprocessing import StandardScaler
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam
-from sklearn.metrics import confusion_matrix, cohen_kappa_score, roc_curve, roc_auc_score
+from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from scipy.stats import ks_2samp
 import matplotlib.pyplot as plt
 import localConfig as cfg
 from commonFunctions import StopDataLoader, FOM1, FOM2, FullFOM, getYields
 
 import sys
-from keras.models import model_from_json
 from prepareDATA import *
 
 
 
-    os.chdir(filepath)
 
-    print "Loading Model ..."
-    with open(model_name+'.json', 'r') as json_file:
-      loaded_model_json = json_file.read()
-    model = model_from_json(loaded_model_json)
-    model.load_weights(model_name+".h5")
-    model.compile(loss = 'binary_crossentropy', optimizer = 'adam')
 
     print("Getting predictions")
     devPredict = model.predict(XDev)
@@ -238,3 +303,4 @@ from prepareDATA import *
     plt.show()
 
     sys.exit("Done!")
+'''
