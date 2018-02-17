@@ -82,11 +82,14 @@ if __name__ == "__main__":
                 print name
 
             acc = history.history["acc"]
-            #val_acc = history.history['val_acc']
+            val_acc = history.history['val_acc']
             loss = history.history['loss']
-            #val_loss = history.history['val_loss']
+            val_loss = history.history['val_loss']
             pickle.dump(acc, open("accuracy/acc_"+name+".pickle", "wb"))
             pickle.dump(loss, open("loss/loss_"+name+".pickle", "wb"))
+            pickle.dump(val_acc, open("accuracy/val_acc_"+name+".pickle", "wb"))
+            pickle.dump(val_loss, open("loss/val_loss_"+name+".pickle", "wb"))
+
             model.save(name+".h5")
             model_json = model.to_json()
             with open(name + ".json", "w") as json_file:
