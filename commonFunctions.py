@@ -8,6 +8,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam, Nadam
+from keras.regularizers import l2
 from math import log
 
 # Signal Dataset
@@ -89,13 +90,13 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
-  
+
   testPath = "nTuples_v2017-10-19_test"+suffix+"/"
   trainPath = "nTuples_v2017-10-19_train"+suffix+"/"
-  
+
   #testPath = "test/"
   #trainPath = "train/"
-  
+
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
                                 path + testPath + sigName_test + suffix + ".root",
@@ -244,14 +245,14 @@ def getYields(dataVal, cut=0.5, luminosity=35866, splitFactor=2):
 
 # Classifiers
 
-def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate=0):
+def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate=0, regularizer=0):
   model = Sequential()
-  model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
+  model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu', kernel_regularizer=l2(regularizer)))
   model.add(Dropout(dropout_rate))
   for i in range(0,layers-1):
-      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
+      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'), kernel_regularizer=l2(regularizer))
       model.add(Dropout(dropout_rate))
-  model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
+  model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'), kernel_regularizer=l2(regularizer))
   model.compile(**compileArgs)
   return model
 

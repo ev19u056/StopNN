@@ -117,15 +117,15 @@ if __name__ == "__main__":
     if args.loss:
         import pickle
         loss = pickle.load(open(loss_path+"loss_"+model_name+".pickle", "rb"))
-#        val_loss = pickle.load(open("loss/val_loss_"+name+".pickle", "wb"))
+        val_loss = pickle.load(open(loss_path+"val_loss_"+model_name+".pickle", "rb"))
         plt.plot(loss)
-#        plt.plot(loss_val['val_acc'])
+        plt.plot(val_loss)
         plt.title('Model loss')
         plt.ylabel('Loss')
         plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
-#        plt.legend(['train', 'test'], loc='best')
+        plt.legend(['train', 'test'], loc='best')
         plt.savefig(plots_path+'loss_'+model_name+'.pdf')
         if args.preview:
             plt.show()
@@ -133,15 +133,15 @@ if __name__ == "__main__":
     if args.accuracy:
         import pickle
         acc = pickle.load(open(acc_path+"acc_"+model_name+".pickle", "rb"))
-#        val_acc = pickle.load(open("acc/val_acc_"+name+".pickle", "wb"))
+        val_acc = pickle.load(open(acc_path+"val_acc_"+model_name+".pickle", "rb"))
         plt.plot(acc)
-#        plt.plot(acc_val['val_acc'])
+        plt.plot(val_acc)
         plt.title('Model accuracy')
         plt.ylabel('Accuracy')
         plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
-#        plt.legend(['train', 'test'], loc='best')
+        plt.legend(['train', 'test'], loc='best')
         plt.savefig(plots_path+'acc_'+model_name+'.pdf')
         if args.preview:
             plt.show()
