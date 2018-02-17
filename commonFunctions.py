@@ -248,10 +248,10 @@ def getYields(dataVal, cut=0.5, luminosity=35866, splitFactor=2):
 def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate=0, regularizer=0):
   model = Sequential()
   model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu', kernel_regularizer=l1(regularizer)))
-  model.add(Dropout(dropout_rate))
+  #model.add(Dropout(dropout_rate))
   for i in range(0,layers-1):
       model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu', kernel_regularizer=l1(regularizer)))
-      model.add(Dropout(dropout_rate))
+      #model.add(Dropout(dropout_rate))
   model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal', kernel_regularizer=l1(regularizer)))
   model.compile(**compileArgs)
   return model
