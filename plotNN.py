@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--prediction', action='store_true', help='Predictions plot')
     parser.add_argument('-r', '--areaUnderROC', action='store_true', help='Area under ROC plot')
     parser.add_argument('-w', '--weights', action='store_true', help='Plotn neural network weights')
-    parser.add_argument('-z', '--stucture', action='store_true', help='Plotn neural network structure')
+    parser.add_argument('-z', '--structure', action='store_true', help='Plotn neural network structure')
     parser.add_argument('-l', '--layers', type=int, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, help='Number of neurons per layer')
     parser.add_argument('-x', '--gridSearch', action='store_true', help='File on grid search')
@@ -140,8 +140,10 @@ if __name__ == "__main__":
 
     if args.overtrainingCheck:
         print "Code missing"
+
     if args.prediction:
         print "Code missing"
+
     if args.areaUnderROC:
         from sklearn.metrics import roc_auc_score, roc_curve
 
@@ -164,6 +166,76 @@ if __name__ == "__main__":
         if args.preview:
             plt.show()
 
+    if args.weights:
+        import math
+        from matplotlib.colors import LinearSegmentedColormap
+
+        #Color maps
+        cdict = {'red':   ((0.0, 0.97, 0.97),
+                           (0.25, 0.0, 0.0),
+                           (0.75, 0.0, 0.0),
+                           (1.0, 1.0, 1.0)),
+
+                 'green': ((0.0, 0.25, 0.25),
+                           (0.25, 0.15, 0.15),
+                           (0.75, 0.39, 0.39),
+                           (1.0, 0.78, 0.78)),
+
+                 'blue':  ((0.0, 1.0, 1.0),
+                           (0.25, 0.65, 0.65),
+                           (0.75, 0.02, 0.02),
+                           (1.0, 0.0, 0.0))
+                }
+        myColor = LinearSegmentedColormap('myColorMap', cdict)
+
+        nLayers = 0
+        for layer in model.layers:
+            if len(layer.get_weights()) == 0:
+                continue
+            nLayers+=1
+
+        maxWeights = 0
+
+        figure = plt.figure()
+        figure.suptitle("Weights", fontsize=12)
+
+        i=1
+        nRow=2
+        nCol=3
+
+        if nLayers < 5:
+            nRow = 2.0
+            nCol = 2
+
+        elif nLayers < 10:
+            nRow = math.ceil(nLayers / 3)
+            nCol = 3
+
+        else:
+            nRow = math.ceil(nLayers / 4)
+            nCol = 4
+
+        for layer in model.layers:
+            if len(layer.get_weights()) == 0:
+                continue
+            ax = figure.add_subplot(nRow, nCol,i)
+
+            im = plt.imshow(layer.get_weights()[0], interpolation="none", vmin=-2, vmax=2, cmap=myColor)
+            plt.title(layer.name, fontsize=10)
+            plt.xlabel("Neuron", fontsize=9)
+            plt.ylabel("Input", fontsize=9)
+            plt.colorbar(im, use_gridspec=True)
+
+            i+=1
+
+        plt.tight_layout()
+        plt.savefig('Weights_'+model_name+'.pdf', bbox_inches='tight')
+        if args.preview:
+            plt.show()
+
+    if args.structure:
+        from keras.utils import plot_model
+        plot_model(model, to_file='model.pdf', show_shapes=True)
 
 
 
@@ -182,27 +254,7 @@ import localConfig as cfg
 from commonFunctions import StopDataLoader, FOM1, FOM2, FullFOM, getYields
 
 import sys
-from prepareDATA import *
 
-
-
-
-
-    print("Getting predictions")
-    devPredict = model.predict(XDev)
-    valPredict = model.predict(XVal)
-
-
-    print("Getting scores")
-
-    scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
-    scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
-    print ""
-    cohen_kappa=cohen_kappa_score(YVal, valPredict.round())
-
-    print "Calculating parameters"
-    dataDev["NN"] = devPredict
-    dataVal["NN"] = valPredict
 
     sig_dataDev=dataDev[dataDev.category==1]
     bkg_dataDev=dataDev[dataDev.category==0]
@@ -324,14 +376,6 @@ from prepareDATA import *
     plt.xlabel("ND")
     plt.legend(['Background', 'Signal'], loc='best')
     plt.savefig('FOM_'+model_name+'.png', bbox_inches='tight')
-    plt.show()
-
-    plt.plot(fpr, tpr)
-    plt.xlabel('False positive rate')
-    plt.ylabel('True positive rate')
-    plt.title('ROC curve')
-    plt.legend(["Integral: {0}".format(roc_integral)],loc='best')
-    plt.savefig('ROC_'+model_name+'.png', bbox_inches='tight')
     plt.show()
 
     sys.exit("Done!")
