@@ -75,7 +75,7 @@ if __name__ == "__main__":
     val_loss = history.history['val_loss']
 
     assure_path_exists(filepath+"/accuracy/"+"dummy.txt")
-    assure_path_exists(filepath+"/loss/"+"dummy.txt
+    assure_path_exists(filepath+"/loss/"+"dummy.txt")
     pickle.dump(acc, open("accuracy/acc_"+name+".pickle", "wb"))
     pickle.dump(loss, open("loss/loss_"+name+".pickle", "wb"))
     pickle.dump(val_acc, open("accuracy/val_acc_"+name+".pickle", "wb"))
