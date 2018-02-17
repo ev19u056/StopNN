@@ -109,6 +109,7 @@ if __name__ == "__main__":
         args.accuracy = True
         args.overtrainingCheck = True
         args.prediction = True
+        args.efficiencyAndFOM = True
         args.areaUnderROC = True
         args.weights = True
         args.stucture = True
