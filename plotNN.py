@@ -9,8 +9,8 @@ import root_numpy
 import numpy as np
 
 if __name__ == "__main__":
-    import argparse
     import sys
+    import argparse
 
     parser = argparse.ArgumentParser(description='Process the command line options')
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
@@ -41,6 +41,7 @@ if __name__ == "__main__":
     from prepareDATA import *
     import matplotlib.pyplot as plt
     from keras.models import model_from_json
+    from commonFunctions import assure_path_exists
 
     loss_path = ""
     acc_path = ""
@@ -71,6 +72,8 @@ if __name__ == "__main__":
         filepath = "/home/diogo/PhD/SingleNN/" + model_name
 
     os.chdir(filepath)
+    plots_path = filepath+"/plots_"+model_name+"/"
+    assure_path_exists(plots_path+"dummy.txt")
 
     if args.verbose:
         print "Loading Model ..."
@@ -124,7 +127,7 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
 #        plt.legend(['train', 'test'], loc='best')
-        plt.savefig('loss_'+model_name+'.pdf')
+        plt.savefig(plots_path+'_loss_'+model_name+'.pdf')
         if args.preview:
             plt.show()
 
@@ -140,7 +143,7 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
 #        plt.legend(['train', 'test'], loc='best')
-        plt.savefig('acc_'+model_name+'.pdf')
+        plt.savefig(plots_path+'_acc_'+model_name+'.pdf')
         if args.preview:
             plt.show()
 
@@ -165,7 +168,7 @@ if __name__ == "__main__":
         plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweight='bold')
         plt.title("Cohen's kappa: {0}\nKolmogorov Smirnov test: {1}".format(cohen_kappa, km_value[1]), fontsize=10)
         plt.legend(['Signal (Test sample)', 'Background (Test sample)', 'Signal (Train sample)', 'Background (Train sample)'], loc='best')
-        plt.savefig('hist_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'_hist_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
@@ -178,7 +181,7 @@ if __name__ == "__main__":
         plt.legend(['Background + Signal (test sample)', 'Background (test sample)'], loc="best" )
         plt.hist(bkg_dataDev["NN"], 50, facecolor='red', weights=bkg_dataDev["weight"])
         plt.hist(both_dataDev["NN"], 50, color="blue", histtype="step", weights=both_dataDev["weight"])
-        plt.savefig('pred_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'_pred_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
@@ -250,7 +253,7 @@ if __name__ == "__main__":
         plt.ylabel("Eff")
         plt.xlabel("ND")
         plt.legend(['Background', 'Signal'], loc='best')
-        plt.savefig('FOM_EFF_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'_FOM_EFF_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
@@ -272,7 +275,7 @@ if __name__ == "__main__":
         plt.title('ROC curve')
         rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal)]
         plt.legend(rocLegend, loc='best')
-        plt.savefig('ROC_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'_ROC_'+model_name+'.pdf', bbox_inches='tight')
         if args.verbose:
             print "ROC Curve Integral:", roc_integral
         if args.preview:
@@ -341,7 +344,7 @@ if __name__ == "__main__":
             i+=1
 
         plt.tight_layout()
-        plt.savefig('Weights_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'_Weights_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
