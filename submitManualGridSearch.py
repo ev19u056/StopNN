@@ -34,7 +34,7 @@ if __name__ == "__main__":
         for batchSize in bsArray:
             for decay in dArray:
                 for learningRate in lrArray:
-                    baseName = filepath + "E"+str(epoch)+"_Bs"+str(batchSize)+"_Lr"+str(learningRate) + "_Dr" + str(decay) + "/"
+                    baseName = filepath + "E"+str(epoch)+"_Bs"+str(batchSize)+"_Lr"+str(learningRate) + "_De" + str(decay) + "/"
                     assure_path_exists(baseName+"dummy.txt")
                     with open(baseName+'manualGridSearch.sh', 'w') as f:
                         f.write("#!/bin/bash\n")
