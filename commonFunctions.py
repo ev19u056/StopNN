@@ -250,9 +250,9 @@ def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate=0
   model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu', kernel_regularizer=l2(regularizer)))
   model.add(Dropout(dropout_rate))
   for i in range(0,layers-1):
-      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'), kernel_regularizer=l2(regularizer))
+      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu', kernel_regularizer=l2(regularizer)))
       model.add(Dropout(dropout_rate))
-  model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'), kernel_regularizer=l2(regularizer))
+  model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal', kernel_regularizer=l2(regularizer)))
   model.compile(**compileArgs)
   return model
 
