@@ -43,8 +43,8 @@ if __name__ == "__main__":
     from keras.models import model_from_json
     from commonFunctions import assure_path_exists
 
-    loss_path = ""
-    acc_path = ""
+    loss_path = "loss/"
+    acc_path = "accuracy/"
 
     if args.file != None:
         model_name = args.file
@@ -54,6 +54,8 @@ if __name__ == "__main__":
 
     if args.singleNN:
         filepath = cfg.lgbk + "SingleNN/" + model_name
+        #loss_path = ""
+        #acc_path = ""
     elif args.gridSearch:
         filepath = cfg.lgbk + "Searches/"+ model_name
         nLayers = args.layers
@@ -61,13 +63,9 @@ if __name__ == "__main__":
         model_name = "L"+str(nLayers)+"_N"+str(nNeurons)+"_"+model_name
         model_name = model_name.replace("D","Dr")
         model_name = model_name+"_TP"+test_point+"_DT"+suffix
-        loss_path = "loss/"
-        acc_path = "accuracy/"
     elif args.runNum != None:
         filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
         model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_"+test_point+"_run"+str(args.runNum)
-        loss_path = "loss/"
-        acc_path = "accuracy/"
     elif args.local:
         filepath = "/home/diogo/PhD/SingleNN/" + model_name
 
