@@ -125,7 +125,7 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
 #        plt.legend(['train', 'test'], loc='best')
-        plt.savefig(plots_path+'_loss_'+model_name+'.pdf')
+        plt.savefig(plots_path+'loss_'+model_name+'.pdf')
         if args.preview:
             plt.show()
 
@@ -141,7 +141,7 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
 #        plt.legend(['train', 'test'], loc='best')
-        plt.savefig(plots_path+'_acc_'+model_name+'.pdf')
+        plt.savefig(plots_path+'acc_'+model_name+'.pdf')
         if args.preview:
             plt.show()
 
@@ -157,7 +157,7 @@ if __name__ == "__main__":
             print "KS test statistic:", km_value[0]
             print "KS test p-value:", km_value[1]
 
-        plt.yscale('log')
+        #plt.yscale('log')
         plt.hist(sig_dataDev["NN"], 50, facecolor='blue', alpha=0.7, normed=1, weights=sig_dataDev["weight"])
         plt.hist(bkg_dataDev["NN"], 50, facecolor='red', alpha=0.7, normed=1, weights=bkg_dataDev["weight"])
         plt.hist(sig_dataVal["NN"], 50, color='blue', alpha=1, normed=1, weights=sig_dataVal["weight"], histtype="step")
@@ -166,7 +166,7 @@ if __name__ == "__main__":
         plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweight='bold')
         plt.title("Cohen's kappa: {0}\nKolmogorov Smirnov test: {1}".format(cohen_kappa, km_value[1]), fontsize=10)
         plt.legend(['Signal (Test sample)', 'Background (Test sample)', 'Signal (Train sample)', 'Background (Train sample)'], loc='best')
-        plt.savefig(plots_path+'_hist_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'hist_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
@@ -179,7 +179,7 @@ if __name__ == "__main__":
         plt.legend(['Background + Signal (test sample)', 'Background (test sample)'], loc="best" )
         plt.hist(bkg_dataDev["NN"], 50, facecolor='red', weights=bkg_dataDev["weight"])
         plt.hist(both_dataDev["NN"], 50, color="blue", histtype="step", weights=both_dataDev["weight"])
-        plt.savefig(plots_path+'_pred_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'pred_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
@@ -251,7 +251,7 @@ if __name__ == "__main__":
         plt.ylabel("Eff")
         plt.xlabel("ND")
         plt.legend(['Background', 'Signal'], loc='best')
-        plt.savefig(plots_path+'_FOM_EFF_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'FOM_EFF_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
@@ -273,9 +273,7 @@ if __name__ == "__main__":
         plt.title('ROC curve')
         rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal)]
         plt.legend(rocLegend, loc='best')
-        plt.savefig(plots_path+'_ROC_'+model_name+'.pdf', bbox_inches='tight')
-        if args.verbose:
-            print "ROC Curve Integral:", roc_integral
+        plt.savefig(plots_path+'ROC_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
@@ -342,7 +340,7 @@ if __name__ == "__main__":
             i+=1
 
         plt.tight_layout()
-        plt.savefig(plots_path+'_Weights_'+model_name+'.pdf', bbox_inches='tight')
+        plt.savefig(plots_path+'Weights_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
 
