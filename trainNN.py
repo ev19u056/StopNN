@@ -47,9 +47,9 @@ if __name__ == "__main__":
     if args.verbose:
         verbose = 1
 
-    compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'Nadam', 'metrics': ["accuracy"]}
+    compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
     trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': verbose}
-    myOpt = Nadam(lr=learning_rate)#, decay=my_decay)
+    myOpt = Adam(lr=learning_rate)#, decay=my_decay)
     compileArgs['optimizer'] = myOpt
 
     name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
