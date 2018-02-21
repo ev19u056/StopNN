@@ -8,6 +8,7 @@ import root_numpy
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.externals import joblib
+from sklearn import decomposition
 
 import localConfig as cfg
 from commonFunctions import StopDataLoader
@@ -75,5 +76,8 @@ XVal = scaler.transform(XVal)
 
 scalerfile = 'scaler_'+train_DM+'.sav'
 joblib.dump(scaler, scalerfile)
+
+pca = decomposition.PCA(n_components=len(myFeatures)-1)
+pca.fit(XDev)
 
 print "DATA is ready!"
