@@ -78,6 +78,8 @@ scalerfile = 'scaler_'+train_DM+'.sav'
 joblib.dump(scaler, scalerfile)
 
 pca = decomposition.PCA(n_components=len(myFeatures)-1)
-pca.fit(XDev)
+pca.fit_transform(XDev,myFeatures)
+
+print "PCA"
 
 print "DATA is ready!"
