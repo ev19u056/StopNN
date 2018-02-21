@@ -77,8 +77,8 @@ XVal = scaler.transform(XVal)
 scalerfile = 'scaler_'+train_DM+'.sav'
 joblib.dump(scaler, scalerfile)
 
-#pca = decomposition.PCA(n_components=len(myFeatures))
-#XDev = pca.fit_transform(XDev)
-#XVal = pca.transform(XVal)
+pca = decomposition.PCA(n_components=len(myFeatures))
+XDev = pca.fit_transform(XDev)
+XVal = pca.transform(XVal)
 
 print "DATA is ready!"

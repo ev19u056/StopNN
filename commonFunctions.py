@@ -169,10 +169,10 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   bkgVal["sampleWeight"] = 1
 
   # Weights without SF
-  #sigDev.weight = sigDev.XS/sigDev.Nevt
-  #sigVal.weight = sigVal.XS/sigVal.Nevt
-  #bkgDev.weight = bkgDev.XS/bkgDev.Nevt
-  #bkgVal.weight = bkgVal.XS/bkgVal.Nevt
+  sigDev.weight = sigDev.XS/sigDev.Nevt
+  sigVal.weight = sigVal.XS/sigVal.Nevt
+  bkgDev.weight = bkgDev.XS/bkgDev.Nevt
+  bkgVal.weight = bkgVal.XS/bkgVal.Nevt
 
 
   if fraction < 1.0:
