@@ -52,10 +52,10 @@ bkgDatasets = [
                 "Wjets_800to1200",
                 "Wjets_1200to2500",
                 "Wjets_2500toInf",
-                #"TTJets_DiLepton",
-                #"TTJets_SingleLeptonFromTbar",
-                #"TTJets_SingleLeptonFromT",
-                "TT_pow",
+                "TTJets_DiLepton",
+                "TTJets_SingleLeptonFromTbar",
+                "TTJets_SingleLeptonFromT",
+                #"TT_pow",
                 "ZJetsToNuNu_HT100to200",
                 "ZJetsToNuNu_HT200to400",
                 "ZJetsToNuNu_HT400to600",
@@ -169,10 +169,10 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   bkgVal["sampleWeight"] = 1
 
   # Weights without SF
-  sigDev.weight = sigDev.XS/sigDev.Nevt
-  sigVal.weight = sigVal.XS/sigVal.Nevt
-  bkgDev.weight = bkgDev.XS/bkgDev.Nevt
-  bkgVal.weight = bkgVal.XS/bkgVal.Nevt
+  #sigDev.weight = sigDev.XS/sigDev.Nevt
+  #sigVal.weight = sigVal.XS/sigVal.Nevt
+  #bkgDev.weight = bkgDev.XS/bkgDev.Nevt
+  #bkgVal.weight = bkgVal.XS/bkgVal.Nevt
 
 
   if fraction < 1.0:
