@@ -75,15 +75,13 @@ print "Fitting the scaler and scaling the input variables"
 scaler = StandardScaler().fit(XDev)
 XDev = scaler.transform(XDev)
 XVal = scaler.transform(XVal)
-
 scalerfile = 'scaler_'+train_DM+'.sav'
 joblib.dump(scaler, scalerfile)
 
 #pca = decomposition.PCA(n_components=len(myFeatures)).fit(XDev)
 #XDev = pca.transform(XDev)
 #XVal = pca.transform(XVal)
-
-pcafile = 'pca_'+train_DM+'.sav'
-joblib.dump(pca, pcafile)
+#pcafile = 'pca_'+train_DM+'.sav'
+#joblib.dump(pca, pcafile)
 
 print "DATA is ready!"
