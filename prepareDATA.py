@@ -27,7 +27,7 @@ test_point = "550_520"
 train_DM = "550_520"
 
 print "Loading datasets..."
-dataDev, dataVal = StopDataLoader(cfg.loc, inputBranches, selection=preselection, suffix=suffix, signal=train_DM, test=test_point, fraction=fraction), useSF=False
+dataDev, dataVal = StopDataLoader(cfg.loc, inputBranches, selection=preselection, suffix=suffix, signal=train_DM, test=test_point, fraction=fraction, useSF=False)
 #print dataDev.describe()
 #print dataVal.describe()
 '''
