@@ -78,10 +78,10 @@ XVal = scaler.transform(XVal)
 scalerfile = 'scaler_'+train_DM+'.sav'
 joblib.dump(scaler, scalerfile)
 
-#pca = decomposition.PCA(n_components=len(myFeatures)).fit(XDev)
-#XDev = pca.transform(XDev)
-#XVal = pca.transform(XVal)
-#pcafile = 'pca_'+train_DM+'.sav'
-#joblib.dump(pca, pcafile)
+pca = decomposition.PCA(n_components=len(myFeatures)).fit(XDev)
+XDev = pca.transform(XDev)
+XVal = pca.transform(XVal)
+pcafile = 'pca_'+train_DM+'.sav'
+joblib.dump(pca, pcafile)
 
 print "DATA is ready!"
