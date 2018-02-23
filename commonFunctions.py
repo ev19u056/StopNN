@@ -67,7 +67,7 @@ bkgDatasets = [
 
 # Load the Data
 
-def StopDataLoader(path, features, test="550_520", selection="", treename="bdttree", suffix="", signal="DM30", fraction=1.0):
+def StopDataLoader(path, features, test="550_520", selection="", treename="bdttree", suffix="", signal="DM30", fraction=1.0, useSF=False):
   if signal not in signalMap:
     raise KeyError("Unknown training signal requested ("+signal+")")
   if test not in signalMap:
@@ -168,23 +168,23 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   bkgDev["sampleWeight"] = 1
   bkgVal["sampleWeight"] = 1
 
-  # Weights without SF
-  sigDev.weight = sigDev.XS/sigDev.Nevt
-  sigVal.weight = sigVal.XS/sigVal.Nevt
-  bkgDev.weight = bkgDev.XS/bkgDev.Nevt
-  bkgVal.weight = bkgVal.XS/bkgVal.Nevt
-
-
   if fraction < 1.0:
     sigDev.weight = sigDev.weight/fraction
     sigVal.weight = sigVal.weight/fraction
     bkgDev.weight = bkgDev.weight/fraction
     bkgVal.weight = bkgVal.weight/fraction
 
-  sigDev.sampleWeight = sigDev.weight/sigDev.XS
-  sigVal.sampleWeight = sigVal.weight/sigVal.XS
-  bkgDev.sampleWeight = bkgDev.weight
-  bkgVal.sampleWeight = bkgVal.weight
+  if not useSF:
+    sigDev.sampleWeight = sigDev.weight
+    sigVal.sampleWeight = sigVal.weight
+    bkgDev.sampleWeight = bkgDev.weight
+    bkgVal.sampleWeight = bkgVal.weight
+  else:
+    scale = fraction if fraction < 1.0 else 1.0
+    sigDev.sampleWeight = 1/(sigDev.Nevt*scale)
+    sigVal.sampleWeight = 1/(sigVal.Nevt*scale)
+    bkgDev.sampleWeight = bkgDev.XS/(bkgDev.Nevt*scale)
+    bkgVal.sampleWeight = bkgVal.XS/(bkgVal.Nevt*scale)
 
   sigDev.sampleWeight = sigDev.sampleWeight/sigDev.sampleWeight.sum()
   sigVal.sampleWeight = sigVal.sampleWeight/sigVal.sampleWeight.sum()
