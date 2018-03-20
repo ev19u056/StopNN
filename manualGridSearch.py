@@ -77,7 +77,7 @@ if __name__ == "__main__":
             model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, x, y, args.dropoutRate)
             history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev, **trainParams)
 
-            name = "L"+str(y)+"_N"+str(x)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_TP"+test_point+"_DT"+suffix
+            name = "L"+str(y)+"_N"+str(x)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
             if args.verbose:
                 print name
 
