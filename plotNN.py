@@ -53,10 +53,12 @@ if __name__ == "__main__":
 #        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
 
     if args.singleNN:
+        # -f L2_N14_E500_Bs15000_Lr0.003_Dr0.0_De0_TP550_520_DT_skimmed -davs 
         filepath = cfg.lgbk + "SingleNN/" + model_name
         #loss_path = ""
         #acc_path = ""
     elif args.gridSearch:
+        # -f E300_Bs30000_Lr0.01_De0 -davx -l 1 -n 19
         filepath = cfg.lgbk + "Searches/"+ model_name
         nLayers = args.layers
         nNeurons = args.neurons

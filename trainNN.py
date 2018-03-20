@@ -32,6 +32,7 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--learningRate', type=float, required=True, help='Learning rate')
     parser.add_argument('-c', '--decay', type=float, default=0, help='Learning rate decay')
     parser.add_argument('-d', '--dropoutRate', type=float, default=0, help='Drop-out rate')
+    parser.add_argument('-r', '--regularizer', type=float, default=0, help='Regularizer')
 
     args = parser.parse_args()
 
@@ -42,6 +43,7 @@ if __name__ == "__main__":
     learning_rate = args.learningRate
     my_decay = args.decay
     dropout_rate = args.dropoutRate
+    regularizer = args.regularizer
 
     verbose = 0
     if args.verbose:
@@ -65,7 +67,7 @@ if __name__ == "__main__":
         print("Starting the training")
         start = time.time()
     #call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
-    model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate, regularizer=0.0001)
+    model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate, regularizer=regularizer)
     #model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
     #model = gridClassifier(nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,layers=n_layers,neurons=n_neurons,learn_rate=learning_rate,dropout_rate=dropout_rate)
     history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,shuffle=True, **trainParams)
