@@ -124,7 +124,7 @@ if __name__ == "__main__":
         if args.verbose:
             print "val_loss = " + str(val_loss[-1])
             print "loss = " + str(loss[-1])
-            print "dloss = " + str(vl[-1]-l[-1])
+            print "dloss = " + str(val_loss[-1]-loss[-1])
 
         plt.plot(loss)
         plt.plot(val_loss)
@@ -143,6 +143,8 @@ if __name__ == "__main__":
         import pickle
         acc = pickle.load(open(acc_path+"acc_"+model_name+".pickle", "rb"))
         val_acc = pickle.load(open(acc_path+"val_acc_"+model_name+".pickle", "rb"))
+        if args.verbose:
+            print "val_acc = " + str(val_acc[-1])
         plt.plot(acc)
         plt.plot(val_acc)
         plt.title('Model accuracy')
