@@ -53,7 +53,7 @@ if __name__ == "__main__":
 #        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
 
     if args.singleNN:
-        # -f L2_N14_E500_Bs15000_Lr0.003_Dr0.0_De0_TP550_520_DT_skimmed -davs 
+        # -f L2_N14_E500_Bs15000_Lr0.003_Dr0.0_De0_TP550_520_DT_skimmed -davs
         filepath = cfg.lgbk + "SingleNN/" + model_name
         #loss_path = ""
         #acc_path = ""
@@ -121,6 +121,11 @@ if __name__ == "__main__":
         import pickle
         loss = pickle.load(open(loss_path+"loss_"+model_name+".pickle", "rb"))
         val_loss = pickle.load(open(loss_path+"val_loss_"+model_name+".pickle", "rb"))
+        if args.verbose:
+            print "val_loss = " + str(val_loss[-1])
+            print "loss = " + str(loss[-1])
+            print "dloss = " + str(vl[-1]-l[-1])
+
         plt.plot(loss)
         plt.plot(val_loss)
         plt.yscale('log')
