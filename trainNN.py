@@ -54,9 +54,7 @@ if __name__ == "__main__":
     myOpt = Adam(lr=learning_rate)#, decay=my_decay)
     compileArgs['optimizer'] = myOpt
 
-    name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+
-    str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+
-    "_De"+str(args.decay)+"_L2"+str(regularizer)+"_TP"+test_point+"_DT"+suffix
+    name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_De"+str(args.decay)+"_L2"+str(regularizer)+"_TP"+test_point+"_DT"+suffix
 
     filepath = cfg.lgbk+"SingleNN/"+name
 
