@@ -135,6 +135,7 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
         plt.legend(['train', 'test'], loc='best')
+        plt.grid()
         plt.savefig(plots_path+'loss_'+model_name+'.pdf')
         if args.preview:
             plt.show()
@@ -153,6 +154,7 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
         plt.legend(['train', 'test'], loc='best')
+        plt.grid()
         plt.savefig(plots_path+'acc_'+model_name+'.pdf')
         if args.preview:
             plt.show()
