@@ -135,7 +135,6 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
         plt.legend(['train', 'test'], loc='best')
-        plt.grid()
         plt.savefig(plots_path+'loss_'+model_name+'.pdf')
         if args.preview:
             plt.show()
@@ -154,7 +153,6 @@ if __name__ == "__main__":
         plt.xlabel('Epoch')
         plt.legend(['train'], loc='best')
         plt.legend(['train', 'test'], loc='best')
-        plt.grid()
         plt.savefig(plots_path+'acc_'+model_name+'.pdf')
         if args.preview:
             plt.show()
@@ -250,12 +248,14 @@ if __name__ == "__main__":
 
         plt.figure(figsize=(7,6))
         plt.subplots_adjust(hspace=0.5)
+
         plt.subplot(211)
         plt.plot(fomCut, fomEvo)
         plt.title("FOM")
         plt.ylabel("FOM")
         plt.xlabel("ND")
         plt.legend(["Max. FOM: {0}".format(max_FOM)], loc='best')
+        plt.grid()
 
         plt.subplot(212)
         plt.semilogy(fomCut, Eff)
@@ -265,6 +265,8 @@ if __name__ == "__main__":
         plt.ylabel("Eff")
         plt.xlabel("ND")
         plt.legend(['Background', 'Signal'], loc='best')
+        plt.grid()
+
         plt.savefig(plots_path+'FOM_EFF_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()
