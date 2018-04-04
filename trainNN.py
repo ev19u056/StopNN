@@ -33,6 +33,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--decay', type=float, default=0, help='Learning rate decay')
     parser.add_argument('-d', '--dropoutRate', type=float, default=0, help='Drop-out rate')
     parser.add_argument('-r', '--regularizer', type=float, default=0, help='Regularizer')
+    parser.add_argument('-e', '--iteration', type=int, default=0, help='Iteration number i')
 
     args = parser.parse_args()
 
@@ -44,6 +45,7 @@ if __name__ == "__main__":
     my_decay = args.decay
     dropout_rate = args.dropoutRate
     regularizer = args.regularizer
+    iteration = args.iteration
 
     verbose = 0
     if args.verbose:
@@ -54,7 +56,10 @@ if __name__ == "__main__":
     myOpt = Adam(lr=learning_rate)#, decay=my_decay)
     compileArgs['optimizer'] = myOpt
 
-    name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_De"+str(args.decay)+"_L2"+str(regularizer)+"_TP"+test_point+"_DT"+suffix
+    name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_De"+str(args.decay)+"_L2Reg"+str(regularizer)+"_TP"+test_point+"_DT"+suffix
+
+    if iteration != 0:
+        name = name+"_Ver"+str(iteration)
 
     filepath = cfg.lgbk+"SingleNN/"+name
 
