@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--decay', type=float, default=0, help='Learning rate decay')
     parser.add_argument('-d', '--dropoutRate', type=float, default=0, help='Drop-out rate')
     parser.add_argument('-r', '--regularizer', type=float, default=0, help='Regularizer')
-    parser.add_argument('-f', '--iteration', type=int, default=0, help='Iteration number i')
+    parser.add_argument('-i', '--iteration', type=int, default=0, help='Iteration number i')
 
     args = parser.parse_args()
 
@@ -35,22 +35,18 @@ if __name__ == "__main__":
     assure_path_exists(baseName+"dummy.txt")
 
     for i in range(1,iteration+1):
-        shPath=baseName+'trainNN_Ver'+str(iteration)+'.sh'
+        shPath=baseName+'trainNN_Ver'+str(i)+'.sh'
         with open(shPath, 'w') as f:
-            f.write("#!/bin/bash")
-            f.write("#$ -cwd")
-            f.write("#$ -pe mcore 3")
-            f.write("#$ -l container=True")
-            f.write("#...$ -v CONTAINER=CENTOS7")
-            f.write("#$ -v CONTAINER=UBUNTU16")
-            f.write("#...$ -v SGEIN=script.py")
-            f.write("#...$ -v SGEIN=pima-indians-diabetes.data")
-            f.write("#...$ -v SGEOUT=accuracy.pickle")
-            f.write("#...$ -v SGEOUT=loss.pickle")
-            f.write("#$ -l gpu,release=el7")
-            f.write("cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/")
-            f.write("module load root-6.10.02")
-            f.write("python trainNN.py -z -l n_layers -n n_neurons -e n_epochs -a batchSize -b learning_rate -c my_decay -d dropout_rate -r regularizer -e iteration")
+            f.write("#!/bin/bash\n")
+            f.write("#$ -cwd\n")
+            f.write("#$ -pe mcore 3\n")
+            f.write("#$ -l container=True\n")
+            f.write("#...$ -v CONTAINER=CENTOS7\n")
+            f.write("#$ -v CONTAINER=UBUNTU16\n")
+            f.write("#$ -l gpu,release=el7\n")
+            f.write("cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/\n")
+            f.write("module load root-6.10.02\n")
+            f.write("python trainNN.py -z -l " + str(n_layers) + " -n " + str(n_neurons) + " -e " + str(n_epochs) + " -a " + str(batchSize) + " -b " + str(learning_rate) + " -c " + str(my_decay) + " -d " + str(dropout_rate) + " -r " + str(regularizer) + " -i " + str(i)"\n")
             mode = os.fstat(f.fileno()).st_mode
             mode |= 0o111
             os.fchmod(f.fileno(), mode & 0o7777)
