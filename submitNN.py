@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--decay', type=float, default=0, help='Learning rate decay')
     parser.add_argument('-d', '--dropoutRate', type=float, default=0, help='Drop-out rate')
     parser.add_argument('-r', '--regularizer', type=float, default=0, help='Regularizer')
-    parser.add_argument('-e', '--iteration', type=int, default=0, help='Iteration number i')
+    parser.add_argument('-f', '--iteration', type=int, default=0, help='Iteration number i')
 
     args = parser.parse_args()
 
