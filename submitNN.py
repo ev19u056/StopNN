@@ -8,8 +8,6 @@ if __name__ == "__main__":
     import datetime
 
     parser = argparse.ArgumentParser(description='Process the command line options')
-    parser.add_argument('-z', '--batch', action='store_true', help='Whether this is a batch job, if it is, no interactive questions will be asked and answers will be assumed')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
     parser.add_argument('-l', '--layers', type=int, required=True, help='Number of layers')
     parser.add_argument('-n', '--neurons', type=int, required=True, help='Number of neurons per layer')
     parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
@@ -39,20 +37,20 @@ if __name__ == "__main__":
     for i in range(1,iteration+1):
         shPath=baseName+'trainNN_Ver'+str(iteration)+'.sh'
         with open(shPath, 'w') as f:
-            f.write(#!/bin/bash)
-            f.write(#$ -cwd)
-            f.write(#$ -pe mcore 3)
-            f.write(#$ -l container=True)
-            f.write(#...$ -v CONTAINER=CENTOS7)
-            f.write(#$ -v CONTAINER=UBUNTU16)
-            f.write(#...$ -v SGEIN=script.py)
-            f.write(#...$ -v SGEIN=pima-indians-diabetes.data)
-            f.write(#...$ -v SGEOUT=accuracy.pickle)
-            f.write(#...$ -v SGEOUT=loss.pickle)
-            f.write(#$ -l gpu,release=el7)
-            f.write(cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/)
-            f.write(module load root-6.10.02)
-            f.write(python trainNN.py -z -l n_layers -n n_neurons -e n_epochs -a batchSize -b learning_rate -c my_decay -d dropout_rate -r regularizer -e iteration)
+            f.write("#!/bin/bash")
+            f.write("#$ -cwd")
+            f.write("#$ -pe mcore 3")
+            f.write("#$ -l container=True")
+            f.write("#...$ -v CONTAINER=CENTOS7")
+            f.write("#$ -v CONTAINER=UBUNTU16")
+            f.write("#...$ -v SGEIN=script.py")
+            f.write("#...$ -v SGEIN=pima-indians-diabetes.data")
+            f.write("#...$ -v SGEOUT=accuracy.pickle")
+            f.write("#...$ -v SGEOUT=loss.pickle")
+            f.write("#$ -l gpu,release=el7")
+            f.write("cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/")
+            f.write("module load root-6.10.02")
+            f.write("python trainNN.py -z -l n_layers -n n_neurons -e n_epochs -a batchSize -b learning_rate -c my_decay -d dropout_rate -r regularizer -e iteration")
             mode = os.fstat(f.fileno()).st_mode
             mode |= 0o111
             os.fchmod(f.fileno(), mode & 0o7777)
