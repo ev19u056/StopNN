@@ -46,7 +46,7 @@ if __name__ == "__main__":
             f.write("#$ -l gpu,release=el7\n")
             f.write("cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/\n")
             f.write("module load root-6.10.02\n")
-            f.write("python trainNN.py -z -l " + str(n_layers) + " -n " + str(n_neurons) + " -e " + str(n_epochs) + " -a " + str(batchSize) + " -b " + str(learning_rate) + " -c " + str(my_decay) + " -d " + str(dropout_rate) + " -r " + str(regularizer) + " -i " + str(i)"\n")
+            f.write("python trainNN.py -z -l " + str(n_layers) + " -n " + str(n_neurons) + " -e " + str(n_epochs) + " -a " + str(batch_size) + " -b " + str(learning_rate) + " -c " + str(my_decay) + " -d " + str(dropout_rate) + " -r " + str(regularizer) + " -i " + str(i) + "\n")
             mode = os.fstat(f.fileno()).st_mode
             mode |= 0o111
             os.fchmod(f.fileno(), mode & 0o7777)
