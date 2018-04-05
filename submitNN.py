@@ -53,6 +53,6 @@ if __name__ == "__main__":
             os.fchmod(f.fileno(), mode & 0o7777)
 
         #submissionCmd = "qsub -e " + baseName + "log.err -o "+ baseName + "log.out " + shPath
-        submissionCmd = "qsub " + shPath + " -e "+ baseName + str(i) +"log.err -o "+ baseName + str(i) + "log.out"
+        submissionCmd = "qsub " + shPath + " -e "+ baseName + " -o " + baseName
         p = subprocess.Popen(submissionCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
