@@ -129,6 +129,7 @@ if __name__ == "__main__":
         plt.plot(loss)
         plt.plot(val_loss)
         plt.yscale('log')
+	plt.grid()
         plt.title('Model loss')
         plt.ylabel('Loss')
         #plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
