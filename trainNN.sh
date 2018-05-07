@@ -4,8 +4,8 @@
 #$ -pe mcore 3
 
 #$ -l container=True
-#...$ -v CONTAINER=CENTOS7
-#$ -v CONTAINER=UBUNTU16
+#$ -v CONTAINER=CENTOS7
+#...$ -v CONTAINER=UBUNTU16
 
 #...$ -v SGEIN=script.py
 #...$ -v SGEIN=pima-indians-diabetes.data
@@ -19,4 +19,4 @@ cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/
 
 module load root-6.10.02
 
-python trainNN.py -z -l 2 -n 13 -e 5000 -a 15000 -b 0.001 -r 0.0000000001
+python trainNN.py -z -l 2 -n 14 -e 500 -a 15000 -b 0.003
