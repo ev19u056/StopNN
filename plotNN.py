@@ -53,15 +53,18 @@ if __name__ == "__main__":
 #        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_E"+str(args.epochs)+"_Bs"+str(args.batchSize)+"_Lr"+str(args.learningRate)+"_Dr"+str(args.dropoutRate)+"_De"+str(args.decay)+"_TP"+test_point+"_DT"+suffix
 
     if args.singleNN:
+        # -f L2_N14_E500_Bs15000_Lr0.003_Dr0.0_De0_TP550_520_DT_skimmed -davs
         filepath = cfg.lgbk + "SingleNN/" + model_name
         #loss_path = ""
         #acc_path = ""
     elif args.gridSearch:
+        # -f E300_Bs30000_Lr0.01_De0 -davx -l 1 -n 19
         filepath = cfg.lgbk + "Searches/"+ model_name
         nLayers = args.layers
         nNeurons = args.neurons
         model_name = "L"+str(nLayers)+"_N"+str(nNeurons)+"_"+model_name
-        model_name = model_name.replace("D","Dr")
+        #model_name = model_name.replace("De","Dr")
+        #model_name = model_name.replace("Lr5_","Lr5.0_")
         model_name = model_name+"_TP"+test_point+"_DT"+suffix
     elif args.runNum != None:
         filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
@@ -118,9 +121,15 @@ if __name__ == "__main__":
         import pickle
         loss = pickle.load(open(loss_path+"loss_"+model_name+".pickle", "rb"))
         val_loss = pickle.load(open(loss_path+"val_loss_"+model_name+".pickle", "rb"))
+        if args.verbose:
+            print "val_loss = " + str(val_loss[-1])
+            print "loss = " + str(loss[-1])
+            print "dloss = " + str(val_loss[-1]-loss[-1])
+
         plt.plot(loss)
         plt.plot(val_loss)
         plt.yscale('log')
+	plt.grid()
         plt.title('Model loss')
         plt.ylabel('Loss')
         #plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
@@ -135,6 +144,8 @@ if __name__ == "__main__":
         import pickle
         acc = pickle.load(open(acc_path+"acc_"+model_name+".pickle", "rb"))
         val_acc = pickle.load(open(acc_path+"val_acc_"+model_name+".pickle", "rb"))
+        if args.verbose:
+            print "val_acc = " + str(val_acc[-1])
         plt.plot(acc)
         plt.plot(val_acc)
         plt.title('Model accuracy')
@@ -238,12 +249,14 @@ if __name__ == "__main__":
 
         plt.figure(figsize=(7,6))
         plt.subplots_adjust(hspace=0.5)
+
         plt.subplot(211)
         plt.plot(fomCut, fomEvo)
         plt.title("FOM")
         plt.ylabel("FOM")
         plt.xlabel("ND")
         plt.legend(["Max. FOM: {0}".format(max_FOM)], loc='best')
+        plt.grid()
 
         plt.subplot(212)
         plt.semilogy(fomCut, Eff)
@@ -253,6 +266,8 @@ if __name__ == "__main__":
         plt.ylabel("Eff")
         plt.xlabel("ND")
         plt.legend(['Background', 'Signal'], loc='best')
+        plt.grid()
+
         plt.savefig(plots_path+'FOM_EFF_'+model_name+'.pdf', bbox_inches='tight')
         if args.preview:
             plt.show()

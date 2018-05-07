@@ -17,7 +17,7 @@ if __name__ == "__main__":
     filepath = cfg.lgbk+"Searches/"
 
     lrArray = [0.003]
-    dArray = [0]
+    deArray = [0]
     bsArray = [30000]
     eArray = [300]
 
@@ -26,13 +26,13 @@ if __name__ == "__main__":
     if args.scanBatchSize:
         bsArray = bsArray + [50, 300, 500, 3000, 5000, 300000]
     if args.scanLearningRateDecay:
-        dArray = dArray + [0.1]
+        deArray = deArray + [0.1]
     if args.scanLearningRate:
         lrArray = lrArray + [0.0001, 0.0003, 0.001, 0.01, 0.05, 0.1, 0.5, 5]
 
     for epoch in eArray:
         for batchSize in bsArray:
-            for decay in dArray:
+            for decay in deArray:
                 for learningRate in lrArray:
                     baseName = filepath + "E"+str(epoch)+"_Bs"+str(batchSize)+"_Lr"+str(learningRate) + "_De" + str(decay) + "/"
                     assure_path_exists(baseName+"dummy.txt")

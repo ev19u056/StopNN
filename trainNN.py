@@ -32,6 +32,8 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--learningRate', type=float, required=True, help='Learning rate')
     parser.add_argument('-c', '--decay', type=float, default=0, help='Learning rate decay')
     parser.add_argument('-d', '--dropoutRate', type=float, default=0, help='Drop-out rate')
+    parser.add_argument('-r', '--regularizer', type=float, default=0, help='Regularizer')
+    parser.add_argument('-i', '--iteration', type=int, default=0, help='Iteration number i')
 
     args = parser.parse_args()
 
@@ -42,6 +44,8 @@ if __name__ == "__main__":
     learning_rate = args.learningRate
     my_decay = args.decay
     dropout_rate = args.dropoutRate
+    regularizer = args.regularizer
+    iteration = args.iteration
 
     verbose = 0
     if args.verbose:
@@ -52,7 +56,14 @@ if __name__ == "__main__":
     myOpt = Adam(lr=learning_rate)#, decay=my_decay)
     compileArgs['optimizer'] = myOpt
 
+<<<<<<< HEAD
     name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_De"+str(my_decay)+"_Dr"+str(dropout_rate)+"_TP"+test_point+"_DT"+suffix
+=======
+    name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_Dr"+str(dropout_rate)+"_De"+str(args.decay)+"_L2Reg"+str(regularizer)+"_Tr"+train_DM+"_Te"+test_point+"_DT"+suffix
+
+    if iteration != 0:
+        name = name+"_Ver"+str(iteration)
+>>>>>>> d17332f79c004ba1778596bdd002236353874203
 
     filepath = cfg.lgbk+"SingleNN/"+name
 
@@ -65,7 +76,7 @@ if __name__ == "__main__":
         print("Starting the training")
         start = time.time()
     #call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
-    model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate, regularizer=0.0001)
+    model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate, regularizer=regularizer)
     #model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
     #model = gridClassifier(nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,layers=n_layers,neurons=n_neurons,learn_rate=learning_rate,dropout_rate=dropout_rate)
     history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,shuffle=True, **trainParams)
