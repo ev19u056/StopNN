@@ -33,7 +33,7 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--decay', type=float, default=0, help='Learning rate decay')
     parser.add_argument('-d', '--dropoutRate', type=float, default=0, help='Drop-out rate')
     parser.add_argument('-r', '--regularizer', type=float, default=0, help='Regularizer')
-    parser.add_argument('-i', '--iteration', type=int, default=0, help='Iteration number i')
+    parser.add_argument('-i', '--iteration', type=int, default=1, help='Iteration number i')
 
     args = parser.parse_args()
 
@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
     name = "L"+str(n_layers)+"_N"+str(n_neurons)+"_E"+str(n_epochs)+"_Bs"+str(batch_size)+"_Lr"+str(learning_rate)+"_De"+str(my_decay)+"_Dr"+str(dropout_rate)+"_L2Reg"+str(regularizer)+"_Tr"+train_DM+"_Te"+test_point+"_DT"+suffix
 
-    if iteration != 0:
+    if iteration > 1:
         name = name+"_Ver"+str(iteration)
 
     filepath = cfg.lgbk+"SingleNN/"+name
