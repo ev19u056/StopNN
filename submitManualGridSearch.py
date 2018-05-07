@@ -11,6 +11,7 @@ if __name__ == "__main__":
     parser.add_argument('-d' ,'--scanLearningRateDecay', action='store_true', help='Wether to scan learning rate decay')
     parser.add_argument('-b' ,'--scanBatchSize', action='store_true', help='Wether to scan batch size')
     parser.add_argument('-e' ,'--scanEpochs', action='store_true', help='Wether to scan epochs')
+    parser.add_argument(      '--label', help='Label')
 
     args = parser.parse_args()
 
@@ -34,19 +35,18 @@ if __name__ == "__main__":
         for batchSize in bsArray:
             for decay in deArray:
                 for learningRate in lrArray:
-                    baseName = filepath + "E"+str(epoch)+"_Bs"+str(batchSize)+"_Lr"+str(learningRate) + "_De" + str(decay) + "/"
+                    if args.label:
+                        baseName = filepath + args.label + "/"
+                    else:
+                        baseName = filepath + "E"+str(epoch)+"_Bs"+str(batchSize)+"_Lr"+str(learningRate) + "_De" + str(decay) + "/"
                     assure_path_exists(baseName+"dummy.txt")
                     with open(baseName+'manualGridSearch.sh', 'w') as f:
                         f.write("#!/bin/bash\n")
                         f.write("#$ -cwd\n")
                         f.write("#$ -pe mcore 3\n")
                         f.write("#$ -l container=True\n")
-                        f.write("#...$ -v CONTAINER=CENTOS7\n")
-                        f.write("#$ -v CONTAINER=UBUNTU16\n")
-                        f.write("#...$ -v SGEIN=script.py\n")
-                        f.write("#...$ -v SGEIN=pima-indians-diabetes.data\n")
-                        f.write("#...$ -v SGEOUT=accuracy.pickle\n")
-                        f.write("#...$ -v SGEOUT=loss.pickle\n")
+                        f.write("#$ -v CONTAINER=CENTOS7\n")
+                        f.write("#...$ -v CONTAINER=UBUNTU16\n")
                         f.write("#$ -l gpu,release=el7\n")
                         f.write("cd /exper-sw/cmst3/cmssw/users/dbastos/StopNN/\n")
                         f.write("module load root-6.10.02\n")
