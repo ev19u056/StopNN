@@ -36,7 +36,7 @@ if __name__ == "__main__":
             for decay in deArray:
                 for learningRate in lrArray:
                     if args.label:
-                        baseName = filepath + args.label + "/"
+                        baseName = filepath + args.label + ":" + "E"+str(epoch)+"_Bs"+str(batchSize)+"_Lr"+str(learningRate) + "_De" + str(decay) + "/"
                     else:
                         baseName = filepath + "E"+str(epoch)+"_Bs"+str(batchSize)+"_Lr"+str(learningRate) + "_De" + str(decay) + "/"
                     assure_path_exists(baseName+"dummy.txt")
