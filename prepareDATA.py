@@ -8,6 +8,7 @@ import root_numpy
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.externals import joblib
+from sklearn import decomposition
 
 import localConfig as cfg
 from commonFunctions import StopDataLoader
@@ -19,14 +20,16 @@ inputBranches = list(myFeatures)
 inputBranches.append("XS")
 inputBranches.append("weight")
 preselection = "(DPhiJet1Jet2 < 2.5 || Jet2Pt < 60) && (Met > 280) && (HT > 200) && (isTight == 1) && (Jet1Pt > 110)"
-suffix = ""# "_skimmed"
+suffix =""# "_skimmed"
 luminosity = 35866
 number_of_events_print = 0
 test_point = "550_520"
-train_DM = "550_520"
+train_DM = "DM30"
 
 print "Loading datasets..."
-dataDev, dataVal = StopDataLoader(cfg.loc, inputBranches, selection=preselection, suffix=suffix, signal=train_DM, test=test_point, fraction=fraction)
+dataDev, dataVal = StopDataLoader(cfg.loc, inputBranches, selection=preselection,
+                    suffix=suffix, signal=train_DM, test=test_point,
+                    fraction=fraction, useSF=True)
 #print dataDev.describe()
 #print dataVal.describe()
 '''
@@ -72,8 +75,13 @@ print "Fitting the scaler and scaling the input variables"
 scaler = StandardScaler().fit(XDev)
 XDev = scaler.transform(XDev)
 XVal = scaler.transform(XVal)
-
 scalerfile = 'scaler_'+train_DM+'.sav'
 joblib.dump(scaler, scalerfile)
+
+pca = decomposition.PCA(n_components=len(myFeatures)).fit(XDev)
+XDev = pca.transform(XDev)
+XVal = pca.transform(XVal)
+pcafile = 'pca_'+train_DM+'.sav'
+joblib.dump(pca, pcafile)
 
 print "DATA is ready!"

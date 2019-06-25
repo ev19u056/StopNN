@@ -1,13 +1,14 @@
 '''
 Functions used in different files are gathered here to avoid redundance.
 '''
-
+import os
 import root_numpy
 import pandas
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, AlphaDropout
 from keras.optimizers import Adam, Nadam
+from keras.regularizers import l1,l2
 from math import log
 
 # Signal Dataset
@@ -51,9 +52,10 @@ bkgDatasets = [
                 "Wjets_800to1200",
                 "Wjets_1200to2500",
                 "Wjets_2500toInf",
-                "TTJets_DiLepton",
-                "TTJets_SingleLeptonFromTbar",
-                "TTJets_SingleLeptonFromT",
+                #"TTJets_DiLepton",
+                #"TTJets_SingleLeptonFromTbar",
+                #"TTJets_SingleLeptonFromT",
+                "TT_pow",
                 "ZJetsToNuNu_HT100to200",
                 "ZJetsToNuNu_HT200to400",
                 "ZJetsToNuNu_HT400to600",
@@ -65,7 +67,7 @@ bkgDatasets = [
 
 # Load the Data
 
-def StopDataLoader(path, features, test="550_520", selection="", treename="bdttree", suffix="", signal="DM30", fraction=1.0):
+def StopDataLoader(path, features, test="550_520", selection="", treename="bdttree", suffix="", signal="DM30", fraction=1.0, useSF=False):
   if signal not in signalMap:
     raise KeyError("Unknown training signal requested ("+signal+")")
   if test not in signalMap:
@@ -76,6 +78,8 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
     raise ValueError("An invalid fraction was chosen")
   if "XS" not in features:
     features.append("XS")
+  if "Nevt" not in features:
+    features.append("Nevt")
   if "Event" not in features:
     features.append("Event")
   if "weight" not in features:
@@ -86,8 +90,12 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
   sigDev = None
   sigVal = None
 
+
   testPath = "nTuples_v2017-10-19_test"+suffix+"/"
   trainPath = "nTuples_v2017-10-19_train"+suffix+"/"
+
+  #testPath = "test/"
+  #trainPath = "train/"
 
   for sigName_test in signalMap[test]:
     tmp = root_numpy.root2array(
@@ -166,10 +174,17 @@ def StopDataLoader(path, features, test="550_520", selection="", treename="bdttr
     bkgDev.weight = bkgDev.weight/fraction
     bkgVal.weight = bkgVal.weight/fraction
 
-  sigDev.sampleWeight = sigDev.weight/sigDev.XS
-  sigVal.sampleWeight = sigVal.weight/sigVal.XS
-  bkgDev.sampleWeight = bkgDev.weight
-  bkgVal.sampleWeight = bkgVal.weight
+  if not useSF:
+    sigDev.sampleWeight = sigDev.weight
+    sigVal.sampleWeight = sigVal.weight
+    bkgDev.sampleWeight = bkgDev.weight
+    bkgVal.sampleWeight = bkgVal.weight
+  else:
+    scale = fraction if fraction < 1.0 else 1.0
+    sigDev.sampleWeight = 1/(sigDev.Nevt*scale)
+    sigVal.sampleWeight = 1/(sigVal.Nevt*scale)
+    bkgDev.sampleWeight = bkgDev.XS/(bkgDev.Nevt*scale)
+    bkgVal.sampleWeight = bkgVal.XS/(bkgVal.Nevt*scale)
 
   sigDev.sampleWeight = sigDev.sampleWeight/sigDev.sampleWeight.sum()
   sigVal.sampleWeight = sigVal.sampleWeight/sigVal.sampleWeight.sum()
@@ -230,26 +245,26 @@ def getYields(dataVal, cut=0.5, luminosity=35866, splitFactor=2):
 
 # Classifiers
 
-def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate):
+def getDefinedClassifier(nIn, nOut, compileArgs, neurons, layers, dropout_rate=0, regularizer=0):
   model = Sequential()
-  model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-  model.add(Dropout(dropout_rate))
+  model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu', kernel_regularizer=l2(regularizer)))
+  #model.add(Dropout(dropout_rate))
   for i in range(0,layers-1):
-      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
-      model.add(Dropout(dropout_rate))
-  model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
+      model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu', kernel_regularizer=l2(regularizer)))
+      #model.add(Dropout(dropout_rate))
+  model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal', kernel_regularizer=l2(regularizer)))
   model.compile(**compileArgs)
   return model
 
 def gridClassifier(nIn, nOut, compileArgs, layers=1, neurons=1, learn_rate=0.001, dropout_rate=0.0):
     model = Sequential()
     model.add(Dense(neurons, input_dim=nIn, kernel_initializer='he_normal', activation='relu'))
-    #model.add(Dropout(dropout_rate))
-    for i in range(0,layers):
+    model.add(Dropout(dropout_rate))
+    for i in range(0,layers-1):
         model.add(Dense(neurons, kernel_initializer='he_normal', activation='relu'))
         model.add(Dropout(dropout_rate))
     model.add(Dense(nOut, activation="sigmoid", kernel_initializer='glorot_normal'))
-    optimizer = Nadam(lr=learn_rate)
+    optimizer = Adam(lr=learn_rate)
     compileArgs['optimizer'] = optimizer
     model.compile(**compileArgs)
     print("\nTraining with %i layers and %i neurons\n" % (layers, neurons))
@@ -270,6 +285,11 @@ def myClassifier(nIn, nOut, compileArgs, dropout_rate=0.0, learn_rate=0.001):
     compileArgs['optimizer'] = optimizer
     model.compile(**compileArgs)
     return model
+
+def assure_path_exists(path):
+    dir = os.path.dirname(path)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
 
 # Selected range
 

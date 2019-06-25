@@ -25,6 +25,7 @@ if __name__ == "__main__":
     parser.add_argument('-ll', '--local', action='store_true', help='Run locally')
     parser.add_argument('-s', '--singleNN', action='store_true', help='Whether this NN is stored in the Searches or SingleNN folder')
     parser.add_argument('-r', '--runNum', type=int, help='Run number')
+    parser.add_argument('-x', '--GridSearchNewNaming', action='store_true', help='File on new grid search naming')
 
     args = parser.parse_args()
 
@@ -35,8 +36,16 @@ if __name__ == "__main__":
 
     if args.singleNN:
         filepath = cfg.lgbk + "SingleNN/" + model_name
+    elif args.GridSearchNewNaming:
+        filepath = cfg.lgbk + "Searches/"+ model_name
+        nLayers = args.layers
+        nNeurons = args.neurons
+        model_name = "L"+str(nLayers)+"_N"+str(nNeurons)+"_"+model_name
+        model_name = model_name.replace("D","Dr")
+        model_name = model_name+"_TP550_520_DT_skimmed"
     elif args.runNum != None:
         filepath = cfg.lgbk + "Searches/run" + str(args.runNum)
+        model_name = "L"+str(args.layers)+"_N"+str(args.neurons)+"_550_520_run"+str(args.runNum)
     elif args.local:
         filepath = "/home/diogo/PhD/SingleNN/" + model_name
 
