@@ -4,7 +4,6 @@ keras-tf/*
 *.pcm
 *.root
 *.h5
-*.png
 *.json
 *.pyc
 *.txt
