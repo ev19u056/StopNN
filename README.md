@@ -1,18 +1,18 @@
 # LIP Summer Internship 2019: Stop 4-body decay with NN approach
 
-In the next 4 weeks you are going experience a little bit of what an experimental particle physicist does. We are going to focus on search for stop pair production where each stop decays in four bodies.
+In the next 4 weeks you are going experience a little bit of what an experimental particle physicist does. We are going to focus on the search for stop pair production where each stop decays in four bodies.
 
 ![4bodydecaystop](assets/4-bodydecaystop.png)
 
-We'll be looking in the compressed scenario where: Δm = m(stop)-m(neutralino) < 80 GeV using 2016 samples. Since we don't know the mass of the stop nor the mass of the neutralino our signal will be different Δm's (from 10 to 80 GeV) composed of different signal points with the same Δm. Our background is all the standard model processes that have the same signature as the signal: 1 lepton, jets and missing transverse energy (MET). To separate signal from background you're going to develop a NN.
+We'll be looking in the compressed scenario where: Δm = m(stop)-m(neutralino) < 80 GeV using 2016 samples. Since we don't know the mass of the stop nor the mass of the neutralino our signal will be different Δm's (from 10 to 80 GeV) composed of different signal points with the same Δm. Our background is all the standard model processes that have the same signature as the signal: 1 lepton, jets and missing transverse energy (MET). To separate signal from background you're going to develop a NN classifier.
 
-You'll find everything you need in 2016 publication [CMS-SUS-17-005](https://arxiv.org/pdf/1805.05784.pdf)!
+You'll find everything you need to know on 2016 publication [CMS-SUS-17-005](https://arxiv.org/pdf/1805.05784.pdf)!
 
 By the end of this internship you'll understand a little bit more of experimental particle physics from both a theoretical and a practical point of view. I hope this guide will be useful to you and that you develop your coding skills in python, root, shell scripting and a little bit of C++.
 
 ## Setup
 
-This are the steps you need to do before your work as a summer student starts. You should only do it once.
+These are the steps you need to do before your work as a summer student starts. You should only do it once.
 
 1. Get access with the IT team to lip's ncg machines
 1. From your computer, connect to **cassini** via ssh
@@ -102,8 +102,10 @@ model = ev19Classifier(...)
 
 #### Exercise 3 - Improve your NN
 
-1. Improve your model. Here you can play with every parameter of the first step of the precious exercise. You should do some reading to understand how and what you can do to **optimize** your model.
-2. Build **3** more models (as functions in `commonFunctions.py`)
+1. Improve your model. Here you can play with every parameter of the first step of the precious exercise. You should do some reading to understand how and what you can do to **optimize** your model
+2. Build **3** more models (as functions in `commonFunctions.py`). Use dropout layers in at least one of those models. You can also have a look into:
+  - Callbacks
+  - Early stopping
 3. What was the best model you could come up with?
 
 Tip: to improve the speed of your training you should use lip's batch system and submit your training as a job. To do this, you can use/edit the `trainNN.sh` script. To submit it, do the following:
@@ -111,14 +113,28 @@ Tip: to improve the speed of your training you should use lip's batch system and
 qsub trainNN.sh
 ```
 
-----
+## Step 2 - Evaluating your classifier
 
-- callback
-- classifier in commonFunctions
+Remember that you saved your model as an .h5 file. Now, you are going to load it, apply it and "plot" it.
+
+#### Exercise 4 - "Plot" your NN
+
+Your life is facilitaded in this exercise. You just have to look into `plotNN.py` script and run in over your trained model.
+
+1. Run `plotNN.py` over your model
+2. Look at each one of the produced plots. Take a special look into the `ROC` curve and the `FOM` plots. What can you infer from them?
+
+## Step 3 - Hyperparameter Optimization
+
+
+
+#### Manual Grid Search
+#### Bayesian optimization
+
+----
+TO DO:
 - keras
 - tensorflow
-
-
-
-
+- Neural Network 101
+- more examples
 ------------
