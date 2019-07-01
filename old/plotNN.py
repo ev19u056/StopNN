@@ -12,7 +12,6 @@ if __name__ == "__main__":
     import sys
     import argparse
 
-    ## Input arguments. Pay speciall attention to the required ones.
     parser = argparse.ArgumentParser(description='Process the command line options')
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
     parser.add_argument('-f', '--file', required=True, help='File name')
@@ -79,8 +78,6 @@ if __name__ == "__main__":
 
     if args.verbose:
         print "Loading Model ..."
-
-    ## Load your trainned model
     with open(model_name+'.json', 'r') as json_file:
       loaded_model_json = json_file.read()
     model = model_from_json(loaded_model_json)
@@ -132,7 +129,7 @@ if __name__ == "__main__":
         plt.plot(loss)
         plt.plot(val_loss)
         plt.yscale('log')
-	    plt.grid()
+	plt.grid()
         plt.title('Model loss')
         plt.ylabel('Loss')
         #plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))

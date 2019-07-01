@@ -8,6 +8,7 @@ keras-tf/*
 *.pyc
 *.txt
 *.sav
+.DS_Store
 scaler.sav
 localConfig.py
 mvFiles.sh

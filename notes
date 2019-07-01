@@ -1,0 +1,2 @@
+python trainNN.py -l 2 -n 15 -e 50 -a 200 -b 0.01 -v
+python plotNN.py -v -f L2_N15_E50_Bs3000_Lr0.001_De0_Dr0_L2Reg0_TrDM30_Te550_520_DT_Ver1 -a -s -l 2 -n 15 -d

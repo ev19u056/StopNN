@@ -21,8 +21,8 @@ if __name__ == "__main__":
     import argparse
     import sys
 
-    ## Input arguments. Pay speciall attention to the required ones.
     parser = argparse.ArgumentParser(description='Process the command line options')
+#   parser.add_argument('-c', '--configFile', required=True, help='Configuration file describing the neural network topology and options as well as the samples to process')
     parser.add_argument('-z', '--batch', action='store_true', help='Whether this is a batch job, if it is, no interactive questions will be asked and answers will be assumed')
     parser.add_argument('-v', '--verbose', action='store_true', help='Whether to print verbose output')
     parser.add_argument('-l', '--layers', type=int, required=True, help='Number of layers')
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     n_layers = args.layers
     n_neurons = args.neurons
     n_epochs = args.epochs
-    batch_size = args.batchSize
+    batch_size = args.batchSize #len(XDev)/100
     learning_rate = args.learningRate
     my_decay = args.decay
     dropout_rate = args.dropoutRate
@@ -51,7 +51,6 @@ if __name__ == "__main__":
     if args.verbose:
         verbose = 1
 
-    ## Model compile arguments, training parameters and optimizer.
     compileArgs = {'loss': 'binary_crossentropy', 'optimizer': 'adam', 'metrics': ["accuracy"]}
     trainParams = {'epochs': n_epochs, 'batch_size': batch_size, 'verbose': verbose}
     myOpt = Adam(lr=learning_rate)#, decay=my_decay)
@@ -62,7 +61,6 @@ if __name__ == "__main__":
     if iteration > 0:
         name = name+"_Ver"+str(iteration)
 
-    ## Directory to save your NN files. Edit lgbk variable in localConfig.py
     filepath = cfg.lgbk+"SingleNN/"+name
 
     if os.path.exists(filepath) == False:
@@ -73,13 +71,11 @@ if __name__ == "__main__":
         print("Dir "+filepath+" created.")
         print("Starting the training")
         start = time.time()
-
-    ## EXERCISE 2: Create your NN model
-    model = # Please, inset your code here........
-
-    ##Fit your model
+    #call = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-7, patience=5, verbose=1, mode='auto')
+    model = getDefinedClassifier(len(trainFeatures), 1, compileArgs, n_neurons, n_layers, dropout_rate, regularizer=regularizer)
+    #model = myClassifier(len(trainFeatures),1, compileArgs, dropout_rate, learning_rate)
+    #model = gridClassifier(nIn=len(trainFeatures),nOut=1, compileArgs=compileArgs,layers=n_layers,neurons=n_neurons,learn_rate=learning_rate,dropout_rate=dropout_rate)
     history = model.fit(XDev, YDev, validation_data=(XVal,YVal,weightVal), sample_weight=weightDev,shuffle=True, **trainParams)
-
     acc = history.history["acc"]
     val_acc = history.history['val_acc']
     loss = history.history['loss']
@@ -87,8 +83,6 @@ if __name__ == "__main__":
 
     assure_path_exists(filepath+"/accuracy/"+"dummy.txt")
     assure_path_exists(filepath+"/loss/"+"dummy.txt")
-
-    ## Save accuracy and loss values in a pickle file for later plotting
     pickle.dump(acc, open("accuracy/acc_"+name+".pickle", "wb"))
     pickle.dump(loss, open("loss/loss_"+name+".pickle", "wb"))
     pickle.dump(val_acc, open("accuracy/val_acc_"+name+".pickle", "wb"))
@@ -97,7 +91,7 @@ if __name__ == "__main__":
     if args.verbose:
         print("Training took ", time.time()-start, " seconds")
 
-    ## Save your trainned model
+    # To save:
     model.save(name+".h5")
     model_json = model.to_json()
     with open(name + ".json", "w") as json_file:
@@ -154,19 +148,30 @@ if __name__ == "__main__":
         print "Maximized FOM:", max_FOM
         print "FOM Cut:", fomCut[fomEvo.index(max_FOM)]
 
-    ## Plot accuracy and loss evolution over epochs for both training and validation datasets
     if not args.batch:
         import sys
         import matplotlib.pyplot as plt
 
-        ## Plot accuracy for training and validation datasets of epochs
-        # Please, inset your code here........
+        plt.figure(figsize=(7,6))
+        plt.subplots_adjust(hspace=0.5)
+        plt.subplot(211)
+        plt.plot(history.history['acc'])
+        plt.plot(history.history['val_acc'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
 
-        ## Plot loss for training and validation datasets of epochs
-        # Please, inset your code here........
-
-        ## Save your plots
-        # Please, inset your code here........
+        plt.subplot(212)
+        plt.plot(history.history['loss'])
+        plt.plot(history.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.savefig(name+'.png')
+        #plt.savefig('NN2_'+str(y)+''+str(x)+''+test_point+"_"+str(max_FOM)+'.png
 
         if args.verbose:
             print "Model name: "+name

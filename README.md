@@ -6,6 +6,10 @@ In the next 4 weeks you are going experience a little bit of what an experimenta
 
 We'll be looking in the compressed scenario where: Δm = m(stop)-m(neutralino) < 80 GeV using 2016 samples. Since we don't know the mass of the stop nor the mass of the neutralino our signal will be different Δm's (from 10 to 80 GeV) composed of different signal points with the same Δm. Our background is all the standard model processes that have the same signature as the signal: 1 lepton, jets and missing transverse energy (MET). To separate signal from background you're going to develop a NN.
 
+You'll find everything you need in 2016 publication [CMS-SUS-17-005](https://arxiv.org/pdf/1805.05784.pdf)!
+
+By the end of this internship you'll understand a little bit more of experimental particle physics from both a theoretical and a practical point of view. I hope this guide will be useful to you and that you develop your coding skills in python, root, shell scripting and a little bit of C++.
+
 ## Setup
 
 This are the steps you need to do before your work as a summer student starts. You should only do it once.
@@ -31,7 +35,7 @@ git checkout ev19
 
 If you've never worked with GitHub and don't know how to clone a repository [here](https://help.github.com/en/articles/cloning-a-repository) is a helpful guide! You'll also need to generate a new ssh key to do so, follow [this]([here](https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 
-## Step 0
+## Step 0 - Preparing your Data
 
 The first step is to prepare your data for the neural network. You are going to use Monte Carlo (MC) simulated datasets for both signal and background. This MC samples should truthfully represent detector Data.
 
@@ -71,9 +75,50 @@ bdttree->Draw("LepPt>>t")
 Tip: For the last 2 steps, writing a script that does this work for you and then plots the variables might help you! You can use these [scripts as inspiration](https://github.com/diogodebastos/Stop4Body/tree/master/Macros/pMacros). This type of scripts that runs on root are called **Macros**:
 [working with macros](https://root.cern.ch/working-macros).
 
-## Step 1 
+## Step 1 - Training a Neural Network
+
+Reading:
+
+Now that your datasets are ready and you are familiar with the main variables it's time to build your machine learning model. To do this, you should use the `trainNN.py` script.
+
+#### Exercise 2 - Build your first NN model for classification
+
+For this exercise, I eagerly advise you to have a look into [this tutorial](https://machinelearningmastery.com/tutorial-first-neural-network-python-keras/).
+
+1. Build a NN with:
+ - Input layer: 12 neurons
+ - 1 Hidden layer: 14 neurons
+ - Output layer: 1 neuron
+ - Epochs: 100
+ - Batch size: 3000
+ - Learning rate: 0.001
+ - Use **relu** activation function for input and hidden layers and **sigmoid** for the output layer
+ - Kernel initializer: **he_normal** for input and hidden layers and **glorot_normal** for the output layer
+2. Plot accuracy and loss evolution over epochs for both training and validation datasets. What can you tell about your model?
+3. Port your model to the `commonFunctions.py` script as a function, call it `ev19Classifier` and use it in `trainNN.py`. Something like:
+```sh
+model = ev19Classifier(...)
+```
+
+#### Exercise 3 - Improve your NN
+
+1. Improve your model. Here you can play with every parameter of the first step of the precious exercise. You should do some reading to understand how and what you can do to **optimize** your model.
+2. Build **3** more models (as functions in `commonFunctions.py`)
+3. What was the best model you could come up with?
+
+Tip: to improve the speed of your training you should use lip's batch system and submit your training as a job. To do this, you can use/edit the `trainNN.sh` script. To submit it, do the following:
+```sh
+qsub trainNN.sh
+```
+
+----
+
+- callback
+- classifier in commonFunctions
+- keras
+- tensorflow
+
 
 
 
 ------------
-https://machinelearningmastery.com/tutorial-first-neural-network-python-keras/
