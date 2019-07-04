@@ -1,10 +1,10 @@
 # LIP Summer Internship 2019: Stop 4-body decay with NN approach
 
-In the next 4 weeks you are going experience a little bit of what an experimental particle physicist does. We are going to focus on the search for stop pair production where each stop decays in four bodies.
+In the next 4 weeks you are going to experience a little bit of what an experimental particle physicist does. We are going to focus on the search for stop pair production where each stop decays in four bodies.
 
 ![4bodydecaystop](assets/4-bodydecaystop.png)
 
-We'll be looking in the compressed scenario where: Δm = m(stop)-m(neutralino) < 80 GeV using 2016 samples. Since we don't know the mass of the stop nor the mass of the neutralino our signal will be different Δm's (from 10 to 80 GeV) composed of different signal points with the same Δm. Our background is all the standard model processes that have the same signature as the signal: 1 lepton, jets and missing transverse energy (MET). To separate signal from background you're going to develop a NN classifier.
+We'll be looking in the compressed scenario where: Δm = m(stop)-m(neutralino) < 80 GeV using 2016 samples. Since we don't know the mass of the stop nor the mass of the neutralino our signal will be a Δm (from 10 to 80 GeV) composed of different signal points with the same Δm. Our background is all the standard model processes that have the same signature as the signal: 1 lepton, jets and missing transverse energy (MET). To separate signal from background you're going to develop a NN classifier.
 
 You'll find everything you need to know on 2016 publication [CMS-SUS-17-005](https://arxiv.org/pdf/1805.05784.pdf)!
 
@@ -33,7 +33,7 @@ git checkout ev19
 
 **ev19** is the branch your are going to use for this summer project.
 
-If you've never worked with GitHub and don't know how to clone a repository [here](https://help.github.com/en/articles/cloning-a-repository) is a helpful guide! You'll also need to generate a new ssh key to do so, follow [this]([here](https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+If you've never worked with GitHub and don't know how to clone a repository [here](https://help.github.com/en/articles/cloning-a-repository) is a helpful guide! You'll also need to generate a new ssh key to do so, follow [this](https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 
 ## Step 0 - Preparing your Data
 
@@ -77,7 +77,9 @@ Tip: For the last 2 steps, writing a script that does this work for you and then
 
 ## Step 1 - Training a Neural Network
 
-Reading:
+Reading: [Gile's blog post on understanding neural networks](https://amva4newphysics.wordpress.com/2017/03/21/understanding-neural-networks-part-i/?fbclid=IwAR0EhuO-2EzGVDd8ZS9P-SLYLWZvIucRM0ovxVdJYGhIBdC82rI3ImnTmWY)
+
+For the application of the neural network we will be using the [Keras framework](https://keras.io). We will be running it with the [TensorFlow](https://www.tensorflow.org) backend.
 
 Now that your datasets are ready and you are familiar with the main variables it's time to build your machine learning model. To do this, you should use the `trainNN.py` script.
 
@@ -133,8 +135,5 @@ Your life is facilitaded in this exercise. You just have to look into `plotNN.py
 
 ----
 TO DO:
-- keras
-- tensorflow
-- Neural Network 101
 - more examples
 ------------
