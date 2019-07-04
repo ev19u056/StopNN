@@ -23,12 +23,22 @@ ssh -CY <username>@cassini.ncg.ingrid.pt
 ```sh
 ln -s /lstore/cms/<username> LSTORE
 ```
-1. Clone with SSH this repository to you working area
+1. Create a GitHub account and fork this repository
+1. Clone with SSH your repository to your working area and remote add mine
 ```sh
 cd LSTORE
-git clone git@github.com:diogodebastos/StopNN.git
+git clone git@github.com:<github_username>/StopNN.git
 cd StopNN
 git checkout ev19
+git remote add dbastos https://github.com/diogodebastos/StopNN.git
+git pull dbastos ev19
+```
+1. Do your first commit
+
+```sh
+git add .
+git commit -m "my first commit"
+git push
 ```
 
 **ev19** is the branch your are going to use for this summer project.
