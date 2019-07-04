@@ -15,16 +15,16 @@ By the end of this internship you'll understand a little bit more of experimenta
 These are the steps you need to do before your work as a summer student starts. You should only do it once.
 
 1. Get access with the IT team to lip's ncg machines
-1. From your computer, connect to **cassini** via ssh
+2. From your computer, connect to **cassini** via ssh
 ```sh
 ssh -CY <username>@cassini.ncg.ingrid.pt
 ```
-1. Create a symlink to your **lstore** space
+3. Create a symlink to your **lstore** space
 ```sh
 ln -s /lstore/cms/<username> LSTORE
 ```
-1. Create a GitHub account and fork this repository
-1. Clone with SSH your repository to your working area and remote add mine
+4. Create a GitHub account and fork this repository
+5. Clone with SSH your repository to your working area and remote add mine
 ```sh
 cd LSTORE
 git clone git@github.com:<github_username>/StopNN.git
@@ -33,8 +33,7 @@ git checkout ev19
 git remote add dbastos https://github.com/diogodebastos/StopNN.git
 git pull dbastos ev19
 ```
-1. Do your first commit
-
+6. Do your first commit
 ```sh
 git add .
 git commit -m "my first commit"
@@ -61,26 +60,26 @@ In this exercise you are going to open the samples you're going to use, understa
 ```sh
 module load root
 ```
-1. Go to the following directory: `/home/t3cms/dbastos/LSTORE/Stop4Body/nTuples16_v2017-10-19_test`
+2. Go to the following directory: `/home/t3cms/dbastos/LSTORE/Stop4Body/nTuples16_v2017-10-19_test`
 ```sh
 cd /home/t3cms/dbastos/LSTORE/Stop4Body/nTuples16_v2017-10-19_test
 ```
-1. Open the signal sample m(stop)=550 and m(neutralino)=520
+3. Open the signal sample m(stop)=550 and m(neutralino)=520
 ```sh
 root -l T2DegStop_550_520.root
 ```
-1. Inspect the content of *bdttree*
+4. Inspect the content of *bdttree*
 ```sh
 new TBrowser
 ```
-1. Draw the distribution of the leptons momentum - **LepPt**
+5. Draw the distribution of the leptons momentum - **LepPt**
 ```sh
 TH1D* t = new TH1D("t", "lepPT", 200,0,200)
 bdttree->Draw("LepPt>>t")
 ```
-1. Repeat these steps for the following variables: XS, Jet1Pt, Met, mt, LepEta, LepChg, HT, NbLoose, Njet, JetHBpt, DrJetHBLep and JetHBCSV
+6. Repeat these steps for the following variables: XS, Jet1Pt, Met, mt, LepEta, LepChg, HT, NbLoose, Njet, JetHBpt, DrJetHBLep and JetHBCSV
 
-1. Repeat the same steps for other signal samples, for **T2DegStop_deltaM30.root** and for background samples: WJets, TTbar, ZInv
+7. Repeat the same steps for other signal samples, for **T2DegStop_deltaM30.root** and for background samples: WJets, TTbar, ZInv
 
 Tip: For the last 2 steps, writing a script that does this work for you and then plots the variables might help you! You can use these [scripts as inspiration](https://github.com/diogodebastos/Stop4Body/tree/master/Macros/pMacros). This type of scripts that runs on root are called **Macros**:
 [working with macros](https://root.cern.ch/working-macros).
