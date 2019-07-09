@@ -153,7 +153,8 @@ NN
 - neurons/layers
 - activation function
 - loss function
+- learning rate
+- regularizers
 - gradient-descent algorithm
 - backpropagation
--  
 ------------
