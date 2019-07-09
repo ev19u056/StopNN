@@ -4,7 +4,11 @@ In the next 4 weeks you are going to experience a little bit of what an experime
 
 ![4bodydecaystop](assets/4-bodydecaystop.png)
 
-We'll be looking in the compressed scenario where: Δm = m(stop)-m(neutralino) < 80 GeV using 2016 samples. Since we don't know the mass of the stop nor the mass of the neutralino our signal will be a Δm (from 10 to 80 GeV) composed of different signal points with the same Δm. Our background is all the standard model processes that have the same signature as the signal: 1 lepton, jets and missing transverse energy (MET). To separate signal from background you're going to develop a NN classifier.
+We'll be looking in the compressed scenario where: Δm = m(stop)-m(neutralino) < 80 GeV using 2016 samples. Since we don't know the mass of the stop nor the mass of the neutralino our signal will be a Δm (from 10 to 80 GeV) composed of different signal points with the same Δm.
+
+![background](assets/background.png)
+
+Our background is all the standard model processes that have the same signature as the signal: 1 lepton, jets and missing transverse energy (MET). To separate signal from background you're going to develop a NN classifier.
 
 You'll find everything you need to know on 2016 publication [CMS-SUS-17-005](https://arxiv.org/pdf/1805.05784.pdf)!
 
@@ -145,4 +149,11 @@ Your life is facilitaded in this exercise. You just have to look into `plotNN.py
 ----
 TO DO:
 - more examples
+NN
+- neurons/layers
+- activation function
+- loss function
+- gradient-descent algorithm
+- backpropagation
+-  
 ------------
