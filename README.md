@@ -94,6 +94,18 @@ Reading: [Gile's blog post on understanding neural networks](https://amva4newphy
 
 For the application of the neural network we will be using the [Keras framework](https://keras.io). We will be running it with the [TensorFlow](https://www.tensorflow.org) backend.
 
+Before going into the implementation of your neural network we should start by covering some concepts:
+- **activation function:**
+- **[loss function](https://towardsdatascience.com/understanding-binary-cross-entropy-log-loss-a-visual-explanation-a3ac6025181a):** the function you want to minimize during training  - ex: ReLU, ELU, softmax, sigmoid.
+- **learning rate:**
+- **regularizers:**
+- **optimization:**
+- **gradient-descent algorithm:**
+- **backpropagation:**
+- **weight initialization:**
+
+We'll go through all of them on the white board: design a neuron, feedforward the information and then back propagate.
+
 Now that your datasets are ready and you are familiar with the main variables it's time to build your machine learning model. To do this, you should use the `trainNN.py` script.
 
 #### Exercise 2 - Build your first NN model for classification
@@ -141,6 +153,11 @@ Your life is facilitaded in this exercise. You just have to look into `plotNN.py
 
 ## Step 3 - Hyperparameter Optimization
 
+As we’ve seen, training Neural Networks can involve many hyperparameter settings. The most common hyperparameters in context of Neural Networks include:
+
+the initial learning rate
+learning rate decay schedule (such as the decay constant)
+fgregularization strength (L2 penalty, dropout strength)
 
 
 #### Manual Grid Search
@@ -149,12 +166,15 @@ Your life is facilitaded in this exercise. You just have to look into `plotNN.py
 ----
 TO DO:
 - more examples
-NN
-- neurons/layers
-- activation function
-- loss function
-- learning rate
-- regularizers
-- gradient-descent algorithm
-- backpropagation
+- **Preprocess data:** zero-center, normalize (by standard deviation), PCA, whitening
+
+Good reads:
+- [ML cheatsheet](https://ml-cheatsheet.readthedocs.io/en/latest/index.html)
+- [Visual Information Theory](http://colah.github.io/posts/2015-09-Visual-Information/O)
+- [Andrej Karpathy's lectures](https://www.youtube.com/watch?v=8inugqHkfvE&list=PLkt2uSq6rBVctENoVBg1TpCC7OQi31AlC&index=2) + [CS231n course](http://cs231n.github.io/)
+
+Good demos:
+- [TensorFlow Neural Network Playground](https://playground.tensorflow.org)
+- [ConvnetJS demo: toy 2d classification](https://cs.stanford.edu/people/karpathy/convnetjs//demo/classify2d.html)
+
 ------------
