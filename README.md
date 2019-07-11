@@ -95,14 +95,14 @@ Reading: [Gile's blog post on understanding neural networks](https://amva4newphy
 For the application of the neural network we will be using the [Keras framework](https://keras.io). We will be running it with the [TensorFlow](https://www.tensorflow.org) backend.
 
 Before going into the implementation of your neural network we should start by covering some concepts:
-- **activation function:**
-- **[loss function](https://towardsdatascience.com/understanding-binary-cross-entropy-log-loss-a-visual-explanation-a3ac6025181a):** the function you want to minimize during training  - ex: ReLU, ELU, softmax, sigmoid.
-- **learning rate:**
-- **regularizers:**
-- **optimization:**
-- **gradient-descent algorithm:**
-- **backpropagation:**
-- **weight initialization:**
+- **activation function:** defines the output of a neuron. Historically, sigmoid was the most used one but nowadays ReLU is a good place to start. Functions that use the exponential are heavier to compute - ex: ReLU, ELU, softmax, sigmoid
+- **[loss function](https://towardsdatascience.com/understanding-binary-cross-entropy-log-loss-a-visual-explanation-a3ac6025181a):** the function you want to minimize during training. It's a measurement of your model's prediction vs the true label. For a binary classification you can use binary cross entropy. To this loss function it's good if you balance it with weight regularization.
+- **gradient-descent algorithm:** the method applied to minimize the loss function and find a local minimum.
+- **learning rate:** the step you use to update your weights. Common values for learning rates are: 1e-3..1e-5. Start with a high learning rate and decay it over epochs.
+- **regularizers:** you want your weights to be spread out. Relative very big weights might make the other neurons obsolete and you lose discrimination power. One technique is to regularize them. Check L1, L2 regularization methods. You can also implement dropout layers. In a way, dropout gives redundancy to your networks and you can see it as having an ensemble of networks sharing features.
+- **optimization:** you can use different methods to optimize your network: stochastic gradient descent, momentum, Nesterov accelerated gradient, AdaGrad, RMSProp, Adam... Adam is a good one to start
+- **backpropagation:** you want to check how each feature has an impact on the final output.  
+- **weight initialization:** Be careful, don't initialize your weights to zero, small random numbers might be ok for small networks. A reasonable strategy, have unit gaussian data as input and  variance of 1 - ex: Glorot good for tanh activation function doesn't work very well for ReLU activation function use He Normal instead. **You can also do [batch normalization](https://www.dlology.com/blog/one-simple-trick-to-train-keras-model-faster-with-batch-normalization/).**
 
 We'll go through all of them on the white board: design a neuron, feedforward the information and then back propagate.
 
@@ -146,7 +146,7 @@ Remember that you saved your model as an .h5 file. Now, you are going to load it
 
 #### Exercise 4 - "Plot" your NN
 
-Your life is facilitaded in this exercise. You just have to look into `plotNN.py` script and run in over your trained model.
+Your life is facilitaded in this exercise. You just have to look into `plotNN.py` script and run it over your trained model.
 
 1. Run `plotNN.py` over your model
 2. Look at each one of the produced plots. Take a special look into the `ROC` curve and the `FOM` plots. What can you infer from them?
@@ -154,20 +154,35 @@ Your life is facilitaded in this exercise. You just have to look into `plotNN.py
 ## Step 3 - Hyperparameter Optimization
 
 As we’ve seen, training Neural Networks can involve many hyperparameter settings. The most common hyperparameters in context of Neural Networks include:
+- the initial learning rate
+- learning rate decay schedule (such as the decay constant)
+- regularization strength (L2 penalty, dropout strength)
 
-the initial learning rate
-learning rate decay schedule (such as the decay constant)
-fgregularization strength (L2 penalty, dropout strength)
+But you should also play with the network architecture!
 
+There are many ways to optimize your hyperparameters. We are going to cover **random search** and **bayesian optimization**.
 
-#### Manual Grid Search
+#### Random Search vs Grid Search
+
+Imagine you are in the hyperparameter space, that you have all combinations possible of hyperparameters, some of those combinations will give you the best performing neural network for your problem. Unfortunately, computing this is impossible since I just described an infinite space. This means that we can discretize this space and start by choosing only some points, some combinations of hyperparameters, evaluate our models and choose the best one. The way we choose this points can be random or we can select some points equally distant from their closest neighbour. Turns out that it's actually better to sample randomly!
+
+![GSvsRS](assets/GSvsRS.png)
+
+#### Exercise 5 - Optimize your NN: Random Search
+
+You are going to implement a random search!
+
+1. Create a script that takes advantage of `trainNN.py` to build neural networks
+2. Submits them to the batch system
+3. Evaluates them
+4. Optimize over **learning rate**, **weight regularization parameter** and network **topology** (number of neurons and layers)
+5. What is your best set of hyperparameters?
+
+Tip: Optimize in log space: `lr = 10**uniform(-3,-6); reg = 10**uniform(-5,5)`
+
 #### Bayesian optimization
 
 ----
-TO DO:
-- more examples
-- **Preprocess data:** zero-center, normalize (by standard deviation), PCA, whitening
-
 Good reads:
 - [ML cheatsheet](https://ml-cheatsheet.readthedocs.io/en/latest/index.html)
 - [Visual Information Theory](http://colah.github.io/posts/2015-09-Visual-Information/O)
@@ -176,5 +191,7 @@ Good reads:
 Good demos:
 - [TensorFlow Neural Network Playground](https://playground.tensorflow.org)
 - [ConvnetJS demo: toy 2d classification](https://cs.stanford.edu/people/karpathy/convnetjs//demo/classify2d.html)
-
-------------
+----
+**TO DO:**
+- more examples
+- **Preprocess data:** zero-center, normalize (by standard deviation), PCA, whitening
