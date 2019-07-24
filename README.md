@@ -184,6 +184,8 @@ Tip: Optimize in log space: `lr = 10**uniform(-3,-6); reg = 10**uniform(-5,5)`
 
 ----
 Good reads:
+- [Understanding learning rates] (https://towardsdatascience.com/understanding-learning-rates-and-how-it-improves-performance-in-deep-learning-d0d4059c1c10)
+- 
 - [ML cheatsheet](https://ml-cheatsheet.readthedocs.io/en/latest/index.html)
 - [Visual Information Theory](http://colah.github.io/posts/2015-09-Visual-Information/O)
 - [Andrej Karpathy's lectures](https://www.youtube.com/watch?v=8inugqHkfvE&list=PLkt2uSq6rBVctENoVBg1TpCC7OQi31AlC&index=2) + [CS231n course](http://cs231n.github.io/)
